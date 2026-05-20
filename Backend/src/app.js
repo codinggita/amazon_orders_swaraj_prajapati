@@ -44,6 +44,10 @@ app.use("/api/v1/shipping", shippingRoutes);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
+
+const validateRouter = require("./routes/validate.routes");
+app.use("/api/v1/validate", validateRouter);
+
 app.use("/api/v1/errors", errorRoutes);
 
 // 404 handler - after all routes
