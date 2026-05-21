@@ -24,7 +24,29 @@ const activityRouter         = require("./routes/activity.routes");
 const dashboardRouter        = require("./routes/dashboard.routes");
 const systemRouter           = require("./routes/system.routes");
 
+// ── HEAD / OPTIONS router ─────────────────────────────────────────────────────
+const headOptionsRouter = require("./routes/headOptions.routes");
+
 app.use(express.json())
+
+// ── HEAD / OPTIONS routes ─────────────────────────────────────────────────────
+// Mounted FIRST so HEAD handlers and specific OPTIONS handlers win over all
+// other route registrations (including auth-protected routes).
+app.use("/api/v1", headOptionsRouter);
+
+// ── Global OPTIONS fallback: catches any OPTIONS request not matched above ────
+// Uses app.use() with a method check because Express 5 (path-to-regexp v8)
+// does not support wildcard patterns in app.options().
+app.use((req, res, next) => {
+  if (req.method !== "OPTIONS") return next();
+  res.set({
+    "Access-Control-Allow-Origin":  "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Accept",
+    "Access-Control-Max-Age":       "86400"
+  });
+  res.status(204).end();
+});
 
 app.use((req, res, next) => {
   const maintenanceMode = getMaintenanceStatus();
