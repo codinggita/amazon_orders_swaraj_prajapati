@@ -6,35 +6,86 @@ A Node.js backend application for managing Amazon orders with Express and MongoD
 
 ```
 backend/
+├── .env                      # Environment variables (JWT, DB, Email config)
 ├── package.json              # Project dependencies and scripts
 ├── package-lock.json         # Dependency lock file
 ├── server.js                 # Application entry point
 └── src/
-    ├── app.js                # Express app configuration
+    ├── app.js                # Express app configuration & route mounting
     ├── config/
     │   └── db.js             # Database connection configuration
-    ├── controllers/          # Business logic for handling requests
-    ├── middlewares/          # Custom middleware functions
-    ├── models/               # MongoDB schema definitions
-    ├── routes/               # API endpoint definitions
-    └── services/             # Reusable business logic services
+    ├── controllers/
+    │   ├── order.controller.js
+    │   ├── search.controller.js
+    │   ├── filter.controller.js
+    │   ├── pagination.controller.js
+    │   ├── sort.controller.js
+    │   ├── analytics.controller.js
+    │   ├── stats.controller.js
+    │   ├── shipping.controller.js
+    │   ├── auth.controller.js
+    │   ├── admin.controller.js
+    │   ├── bulk.controller.js
+    │   ├── error.controller.js
+    │   └── validate.controller.js
+    ├── middlewares/
+    │   ├── auth.middleware.js
+    │   ├── admin.middleware.js
+    │   ├── errorHandler.middleware.js
+    │   └── notFound.middleware.js
+    ├── models/
+    │   ├── order.model.js
+    │   └── user.model.js
+    ├── routes/
+    │   ├── order.routes.js
+    │   ├── search.routes.js
+    │   ├── filter.routes.js
+    │   ├── pagination.routes.js
+    │   ├── sort.routes.js
+    │   ├── analytics.routes.js
+    │   ├── stats.routes.js
+    │   ├── shipping.routes.js
+    │   ├── auth.routes.js
+    │   ├── admin.routes.js
+    │   ├── bulk.routes.js
+    │   ├── error.routes.js
+    │   └── validate.routes.js
+    ├── services/
+    │   ├── order.service.js
+    │   ├── search.service.js
+    │   ├── filter.service.js
+    │   ├── pagination.service.js
+    │   ├── sort.service.js
+    │   ├── analytics.service.js
+    │   ├── stats.service.js
+    │   ├── shipping.service.js
+    │   ├── auth.service.js
+    │   ├── admin.service.js
+    │   ├── bulk.service.js
+    │   ├── error.service.js
+    │   └── validate.service.js
+    └── utils/
+        ├── AppError.js           # Custom error class for operational errors
+        └── validators.js         # Pure JS validation helper functions
 ```
 
 ## Folder Descriptions
 
 ### `/backend`
-- **package.json** - Defines project metadata, dependencies (express, mongoose, nodemon, dotenv), and npm scripts
+- **package.json** - Defines project metadata, dependencies (express, mongoose, nodemon, dotenv, jsonwebtoken, bcryptjs, nodemailer), and npm scripts
 - **server.js** - Main entry point that starts the Express server
+- **.env** - Environment configuration (MongoDB URI, JWT secret, email credentials)
 - **src/** - Source code directory containing all application logic
 
 ### `/src`
-- **app.js** - Express application setup, middleware configuration, and route integration
+- **app.js** - Express application setup, middleware configuration, maintenance mode check, and route integration
 - **config/db.js** - MongoDB connection setup and configuration
 - **controllers/** - Request handlers that process API calls and return responses
-- **middlewares/** - Custom middleware for authentication, validation, error handling, etc.
+- **middlewares/** - Custom middleware for JWT authentication, admin role checks, error handling, and 404 handling
 - **models/** - Mongoose schemas and models for MongoDB documents
 - **routes/** - Route definitions that map HTTP methods and paths to controllers
 - **services/** - Business logic separated from routes for reusability
+- **utils/** - Utility classes and pure JS validation helpers (no external libraries)
 
 ## Getting Started
 
