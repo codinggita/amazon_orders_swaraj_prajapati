@@ -15,18 +15,24 @@ backend/
     ├── config/
     │   └── db.js             # Database connection configuration
     ├── controllers/
-    │   ├── order.controller.js
-    │   ├── search.controller.js
-    │   ├── filter.controller.js
-    │   ├── pagination.controller.js
-    │   ├── sort.controller.js
-    │   ├── analytics.controller.js
-    │   ├── stats.controller.js
-    │   ├── shipping.controller.js
-    │   ├── auth.controller.js
+    │   ├── activity.controller.js
     │   ├── admin.controller.js
+    │   ├── analytics.controller.js
+    │   ├── auth.controller.js
     │   ├── bulk.controller.js
+    │   ├── dashboard.controller.js
     │   ├── error.controller.js
+    │   ├── filter.controller.js
+    │   ├── notifications.controller.js
+    │   ├── order.controller.js
+    │   ├── pagination.controller.js
+    │   ├── recommendations.controller.js
+    │   ├── search.controller.js
+    │   ├── shipping.controller.js
+    │   ├── sort.controller.js
+    │   ├── stats.controller.js
+    │   ├── system.controller.js
+    │   ├── trending.controller.js
     │   └── validate.controller.js
     ├── middlewares/
     │   ├── auth.middleware.js
@@ -35,37 +41,50 @@ backend/
     │   └── notFound.middleware.js
     ├── models/
     │   ├── order.model.js
+    │   ├── session.model.js
     │   └── user.model.js
     ├── routes/
-    │   ├── order.routes.js
-    │   ├── search.routes.js
-    │   ├── filter.routes.js
-    │   ├── pagination.routes.js
-    │   ├── sort.routes.js
-    │   ├── analytics.routes.js
-    │   ├── stats.routes.js
-    │   ├── shipping.routes.js
-    │   ├── auth.routes.js
+    │   ├── activity.routes.js
     │   ├── admin.routes.js
+    │   ├── analytics.routes.js
+    │   ├── auth.routes.js
     │   ├── bulk.routes.js
+    │   ├── dashboard.routes.js
     │   ├── error.routes.js
+    │   ├── filter.routes.js
+    │   ├── notifications.routes.js
+    │   ├── order.routes.js
+    │   ├── pagination.routes.js
+    │   ├── recommendations.routes.js
+    │   ├── search.routes.js
+    │   ├── shipping.routes.js
+    │   ├── sort.routes.js
+    │   ├── stats.routes.js
+    │   ├── system.routes.js
+    │   ├── trending.routes.js
     │   └── validate.routes.js
     ├── services/
-    │   ├── order.service.js
-    │   ├── search.service.js
-    │   ├── filter.service.js
-    │   ├── pagination.service.js
-    │   ├── sort.service.js
-    │   ├── analytics.service.js
-    │   ├── stats.service.js
-    │   ├── shipping.service.js
-    │   ├── auth.service.js
+    │   ├── activity.service.js
     │   ├── admin.service.js
+    │   ├── analytics.service.js
+    │   ├── auth.service.js
     │   ├── bulk.service.js
-    │   ├── error.service.js
+    │   ├── dashboard.service.js
+    │   ├── filter.service.js
+    │   ├── notifications.service.js
+    │   ├── order.service.js
+    │   ├── pagination.service.js
+    │   ├── recommendations.service.js
+    │   ├── search.service.js
+    │   ├── shipping.service.js
+    │   ├── sort.service.js
+    │   ├── stats.service.js
+    │   ├── system.service.js
+    │   ├── trending.service.js
     │   └── validate.service.js
     └── utils/
         ├── AppError.js           # Custom error class for operational errors
+        ├── cache.js              # Shared in-memory caching utility
         └── validators.js         # Pure JS validation helper functions
 ```
 
@@ -146,23 +165,32 @@ This project follows the MVC (Model-View-Controller) pattern with an additional 
 - **GET** `/:orderId/exists` - Check if an order exists
 - **POST** `/:orderId/cancel` - Cancel order and update status history
 
-### Analytics (Base URL: `/api/v1/analytics`)
-Comprehensive business intelligence metrics using MongoDB aggregation.
-- **GET** `/revenue/total` - Overall revenue metrics
-- **GET** `/revenue/monthly` - Revenue trend by month
-- **GET** `/orders/cancelled` - Cancellation rate and lost revenue
-- **GET** `/products/top-selling` - Best performing products
-- **GET** `/categories/top` - Category-wise revenue performance
-- **GET** `/returns/rate` - Overall return rate analytics
+### Dashboard & Analytics (Base URL: `/api/v1/dashboard` & `/api/v1/analytics`)
+- **GET** `/dashboard/overview` - High-level summary of business performance
+- **GET** `/dashboard/revenue` - Detailed revenue breakdown and trends
+- **GET** `/dashboard/orders` - Order volume and status analytics
+- **GET** `/dashboard/customers` - Customer acquisition and retention metrics
+- **GET** `/analytics/products/top-selling` - Best performing products
+- **GET** `/analytics/categories/top` - Category-wise revenue performance
 
-### Statistics (Base URL: `/api/v1/stats`)
-Real-time statistical breakdown and system health.
-- **GET** `/orders/total` - Order count by status and percentages
-- **GET** `/orders/daily` - Daily order volume with date filtering
-- **GET** `/revenue/total` - Detailed revenue, tax, and discount breakdown
-- **GET** `/revenue/monthly` - Monthly revenue with growth trend (MoM %)
-- **GET** `/customers/count` - Unique customers, new vs repeat metrics
-- **GET** `/system/performance` - Server uptime, memory usage, and DB status
+### Recommendations & Trending (Base URL: `/api/v1/recommendations` & `/api/v1/trending`)
+- **GET** `/recommendations/user/:userId` - Personalized product recommendations
+- **GET** `/recommendations/frequently-bought-together` - Cross-selling suggestions
+- **GET** `/trending/products` - Currently popular items based on sales velocity
+- **GET** `/trending/categories` - Trending product categories
+
+### Notifications & Activity (Base URL: `/api/v1/notifications` & `/api/v1/activity`)
+- **GET** `/notifications` - Fetch user-specific alerts and updates
+- **PATCH** `/notifications/:id/read` - Mark a notification as read
+- **GET** `/activity/logs` - User activity history and audit logs
+- **GET** `/activity/summary` - Aggregated activity metrics
+
+### System & Admin (Base URL: `/api/v1/system` & `/api/v1/admin`)
+- **GET** `/system/health` - Server health check and uptime
+- **GET** `/system/stats` - Resource usage and DB performance
+- **GET** `/admin/users` - Manage system users (Admin only)
+- **POST** `/admin/maintenance` - Toggle maintenance mode
+- **GET** `/admin/logs` - Access system-wide logs
 
 ### Shipping & Delivery (Base URL: `/api/v1/shipping`)
 Logistics and tracking management.
@@ -175,4 +203,3 @@ Logistics and tracking management.
 - **GET** `/carriers` - List supported shipping carriers
 - **PATCH** `/change-address/:orderId` - Update shipping destination
 - **POST** `/reschedule/:orderId` - Reschedule delivery date
-

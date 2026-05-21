@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const User = require("../models/user.model");
 const Order = require("../models/order.model");
 
-// In-memory store
-const appCache = new Map();
+// Shared in-memory cache (imported so admin + system share the same Map instance)
+const appCache = require("../utils/cache");
 const serverLogs = [];
 let maintenanceMode = { enabled: false, message: "", enabledAt: null, enabledBy: null };
 

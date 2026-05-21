@@ -16,6 +16,14 @@ const { getMaintenanceStatus } = require("./services/admin.service");
 const notFound = require("./middlewares/notFound.middleware");
 const errorHandler = require("./middlewares/errorHandler.middleware");
 
+// ── New feature routers ──────────────────────────────────────────────────────
+const recommendationsRouter = require("./routes/recommendations.routes");
+const trendingRouter         = require("./routes/trending.routes");
+const notificationsRouter    = require("./routes/notifications.routes");
+const activityRouter         = require("./routes/activity.routes");
+const dashboardRouter        = require("./routes/dashboard.routes");
+const systemRouter           = require("./routes/system.routes");
+
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -49,6 +57,14 @@ const validateRouter = require("./routes/validate.routes");
 app.use("/api/v1/validate", validateRouter);
 
 app.use("/api/v1/errors", errorRoutes);
+
+// ── New feature routes ───────────────────────────────────────────────────────
+app.use("/api/v1/recommendations", recommendationsRouter);
+app.use("/api/v1/trending",        trendingRouter);
+app.use("/api/v1/notifications",   notificationsRouter);
+app.use("/api/v1/activity",        activityRouter);
+app.use("/api/v1/dashboard",       dashboardRouter);
+app.use("/api/v1/system",          systemRouter);
 
 // 404 handler - after all routes
 app.use(notFound);
