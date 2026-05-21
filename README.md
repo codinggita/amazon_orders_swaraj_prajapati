@@ -4,6 +4,28 @@ A production-ready Node.js + Express + MongoDB REST API for managing Amazon orde
 
 ---
 
+## 🚀 Postman API Documentation
+
+A comprehensive, production-grade Postman collection containing all ~100 API endpoints has been compiled and is included in this repository.
+
+### Postman Collection File:
+* [`amazon_orders_postman_collection.json`](./amazon_orders_postman_collection.json) at the root of the project.
+
+### Premium Built-in Features:
+* **Dynamic Variable Config:** Features a pre-configured `baseUrl` set to your live Render service (`https://amazon-orders-api.onrender.com`) and supports dynamic `{{token}}` headers.
+* **Automated JWT Extraction:** The **Login User** request has a pre-configured test script that extracts the JWT response token and updates the environment's `{{token}}` variable automatically upon a successful response. No more manual copy-pasting of tokens!
+* **15 Feature-Driven Folders:** Logically grouped into Auth, CRUD, Bulk, Advanced Searches, Analytics, Real-time Stats, Admin Control, simulated Errors, Validation, Recommendations, and more.
+
+### How to Import & Use:
+1. Open the Postman desktop application or Postman Web.
+2. Click **Import** in the top-left sidebar.
+3. Drag & drop the `amazon_orders_postman_collection.json` file from your project's root folder.
+4. Click **Import**.
+5. *Optional:* To run tests locally, click the collection name, go to the **Variables** tab, and change the `baseUrl` value to `http://localhost:3000`.
+
+---
+
+
 ## Backend Folder Structure
 
 ```
