@@ -22,7 +22,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Swaraj Prajapati\",\n  \"email\": \"swaraj.prajapati.cg@gmail.com\",\n  \"password\": \"swaraj2006\",\n  \"role\": \"admin\"\n}"
+              "raw": "{\n  \"name\": \"Swaraj Prajapati\",\n  \"email\": \"swaraj.prajapati.cg@gmail.com\",\n  \"password\": \"Swaraj@2006\",\n  \"confirmPassword\": \"Swaraj@2006\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/register",
@@ -66,7 +66,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"swaraj.prajapati.cg@gmail.com\",\n  \"password\": \"swaraj2006\"\n}"
+              "raw": "{\n  \"email\": \"swaraj.prajapati.cg@gmail.com\",\n  \"password\": \"Swaraj@2006\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/login",
