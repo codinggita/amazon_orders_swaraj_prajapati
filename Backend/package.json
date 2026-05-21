@@ -21,6 +21,7 @@
     "nodemon": "^3.1.14"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6"
+    "@types/bcryptjs": "^2.4.6",
+    "axios": "^1.16.1"
   }
 }
