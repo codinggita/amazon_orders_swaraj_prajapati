@@ -24,7 +24,28 @@ const activityRouter         = require("./routes/activity.routes");
 const dashboardRouter        = require("./routes/dashboard.routes");
 const systemRouter           = require("./routes/system.routes");
 
+// ── HEAD / OPTIONS router ─────────────────────────────────────────────────────
+const headOptionsRouter = require("./routes/headOptions.routes");
+
 app.use(express.json())
+
+// ΓöÇΓöÇ Global OPTIONS middleware: handles CORS preflight for ALL routes ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// Must come BEFORE all route mounts so browsers receive a valid preflight reply
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.set({
+      "Access-Control-Allow-Origin":  "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Accept",
+      "Access-Control-Max-Age":       "86400"
+    });
+    return res.status(204).end();
+  }
+  next();
+});
+
+// ── HEAD / OPTIONS routes (mounted before all other routes) ──────────────────
+app.use("/api/v1", headOptionsRouter);
 
 app.use((req, res, next) => {
   const maintenanceMode = getMaintenanceStatus();

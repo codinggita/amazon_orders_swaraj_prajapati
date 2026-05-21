@@ -38,6 +38,7 @@ backend/
     │   ├── auth.middleware.js
     │   ├── admin.middleware.js
     │   ├── errorHandler.middleware.js
+    │   ├── headOptions.middleware.js
     │   └── notFound.middleware.js
     ├── models/
     │   ├── order.model.js
@@ -52,6 +53,7 @@ backend/
     │   ├── dashboard.routes.js
     │   ├── error.routes.js
     │   ├── filter.routes.js
+    │   ├── headOptions.routes.js
     │   ├── notifications.routes.js
     │   ├── order.routes.js
     │   ├── pagination.routes.js
@@ -149,6 +151,13 @@ npm start
 This project follows the MVC (Model-View-Controller) pattern with an additional service layer for a clean, production-ready structure.
 
 ## API Documentation
+
+### Metadata & CORS (Base URL: `/api/v1`)
+The API supports standard metadata queries via `HEAD` and `OPTIONS` methods.
+- **HEAD** `/(.*)` - Retrieve resource metadata and headers without the response body.
+- **OPTIONS** `/(.*)` - Global CORS preflight support for all endpoints.
+- **HEAD** `/orders` - Returns `X-Total-Count` and collection availability.
+- **HEAD** `/orders/search` - Returns supported search fields and capabilities.
 
 ### Order Management (Base URL: `/api/v1/orders`)
 - **GET** `/` - Retrieve all orders (Paginated: `?page=1&limit=10`)
