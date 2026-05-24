@@ -7,6 +7,8 @@ import { Bell, ShoppingBag, IndianRupee, Truck, Settings, AlertTriangle, X } fro
 import { cn } from '../../utils/helpers';
 import { getTimeAgo } from '../../utils/formatters';
 import toast from 'react-hot-toast';
+import GlassContent from '../../components/common/GlassContent';
+import { parseNotifications } from '../../utils/apiHelpers';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
@@ -17,12 +19,16 @@ export default function NotificationsPage() {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/notifications');
-      const data = res.data?.data || res.data || {};
-      setNotifications(data.notifications || data.data || []);
-      setUnreadCount(data.unreadCount || 0);
-    } catch { toast.error('Failed to load notifications'); }
-    finally { setLoading(false); }
+      const res = await api.get('/notifications', { params: { limit: 50 } });
+      const { notifications: list, unreadCount: count } = parseNotifications(res);
+      setNotifications(list.map((n) => ({ ...n, _id: n._id ?? n.id })));
+      setUnreadCount(count);
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || 'Failed to load notifications');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchNotifications(); }, []);

@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import PageHeader from '../../components/layout/PageHeader';
 import Spinner from '../../components/common/Spinner';
 import EmptyState from '../../components/common/EmptyState';
+import Select from '../../components/common/Select';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
 import { Flame } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -42,11 +43,17 @@ export default function TrendingPage() {
           <button onClick={() => setActiveTab('products')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'products' ? 'bg-red-600 text-white' : 'text-red-400 hover:text-red-300 bg-[#1c1112] border border-[#2d1515]'}`}>Trending Products</button>
           <button onClick={() => setActiveTab('categories')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-red-600 text-white' : 'text-red-400 hover:text-red-300 bg-[#1c1112] border border-[#2d1515]'}`}>Trending Categories</button>
         </div>
-        <select value={limit} onChange={e => setLimit(Number(e.target.value))} className="bg-[#1c1112] border border-[#2d1515] rounded px-3 py-1 text-sm text-white focus:outline-none focus:border-red-600 self-end md:self-auto">
-          <option value={10}>Top 10</option>
-          <option value={25}>Top 25</option>
-          <option value={50}>Top 50</option>
-        </select>
+        <div className="w-32 self-end md:self-auto">
+          <Select 
+            value={limit} 
+            onChange={e => setLimit(Number(e.target.value))} 
+            options={[
+              { value: 10, label: 'Top 10' },
+              { value: 25, label: 'Top 25' },
+              { value: 50, label: 'Top 50' }
+            ]}
+          />
+        </div>
       </div>
 
       {loading ? <Spinner center /> : activeTab === 'products' ? (
