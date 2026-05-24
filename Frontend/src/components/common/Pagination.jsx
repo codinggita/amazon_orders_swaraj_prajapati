@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../../utils/helpers';
+import Select from './Select';
 
 export default function Pagination({ page, totalPages, total, limit, onPageChange, onLimitChange }) {
   if (totalPages <= 1 && total === 0) return null;
@@ -13,7 +14,9 @@ export default function Pagination({ page, totalPages, total, limit, onPageChang
     if (page <= 3) end = Math.min(5, totalPages);
     if (page >= totalPages - 2) start = Math.max(1, totalPages - 4);
 
-    for (let i = start; i <= end; i++) pages.push(i);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
     return pages;
   };
 
@@ -21,45 +24,43 @@ export default function Pagination({ page, totalPages, total, limit, onPageChang
   const endItem = Math.min(page * limit, total);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 text-sm text-red-300/70">
       <div className="flex items-center gap-3">
-        <span className="font-body-xs text-[12px] text-red-300/40">
-          Showing{' '}
-          <span className="font-mono tabular-nums text-red-300/60">{startItem}–{endItem}</span>
-          {' '}of{' '}
-          <span className="font-mono tabular-nums text-red-300/60">{total.toLocaleString('en-IN')}</span>
-          {' '}orders
-        </span>
+        <span>Showing <span className="font-medium text-red-200">{startItem}-{endItem}</span> of <span className="font-medium text-red-200">{total}</span></span>
         {onLimitChange && (
-          <select
-            value={limit}
-            onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="font-body bg-[#1c1112] border border-[#2d1515] rounded-md px-2 py-1 text-[12px] text-red-200 focus:outline-none focus:border-red-500"
-          >
-            {[10, 20, 50, 100].map(opt => (
-              <option key={opt} value={opt}>{opt} / page</option>
-            ))}
-          </select>
+          <div className="w-32">
+            <Select 
+              value={limit} 
+              onChange={(e) => onLimitChange(Number(e.target.value))}
+              options={[
+                { value: 10, label: '10 / page' },
+                { value: 20, label: '20 / page' },
+                { value: 50, label: '50 / page' },
+                { value: 100, label: '100 / page' }
+              ]}
+              className="h-8"
+            />
+          </div>
         )}
       </div>
 
       <div className="flex items-center gap-1.5">
-        <button
-          onClick={() => onPageChange(page - 1)}
+        <button 
+          onClick={() => onPageChange(page - 1)} 
           disabled={page === 1}
           className="p-1.5 rounded-md border border-[#2d1515] bg-[#1c1112] text-red-300 hover:bg-red-950/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
-
+        
         {getPageNumbers().map(p => (
           <button
             key={p}
             onClick={() => onPageChange(p)}
             className={cn(
-              'w-8 h-8 rounded-md font-mono text-[12px] tabular-nums flex items-center justify-center transition-colors',
-              p === page
-                ? 'bg-brand-600 text-white'
+              'w-8 h-8 rounded-md font-medium flex items-center justify-center transition-colors',
+              p === page 
+                ? 'bg-brand-600 text-white border-transparent' 
                 : 'border border-[#2d1515] bg-[#1c1112] text-red-300 hover:bg-red-950/40'
             )}
           >
@@ -67,8 +68,8 @@ export default function Pagination({ page, totalPages, total, limit, onPageChang
           </button>
         ))}
 
-        <button
-          onClick={() => onPageChange(page + 1)}
+        <button 
+          onClick={() => onPageChange(page + 1)} 
           disabled={page === totalPages}
           className="p-1.5 rounded-md border border-[#2d1515] bg-[#1c1112] text-red-300 hover:bg-red-950/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
