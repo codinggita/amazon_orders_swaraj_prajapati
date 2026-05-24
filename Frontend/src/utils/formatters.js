@@ -11,12 +11,13 @@ export const formatCurrency = (amount, currency = 'INR') => {
 export const formatCurrencyCompact = (amount, currency = 'INR') => {
   const num = parseFloat(amount) || 0;
   if (num >= 1e7) {
-    return new Intl.NumberFormat('en-IN', {
+    const formatted = new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency,
       notation: 'compact',
       maximumFractionDigits: 2,
     }).format(num);
+    return formatted.replace(/([a-zA-Z]+)$/, ' $1');
   }
   return formatCurrency(num, currency);
 };
@@ -27,7 +28,7 @@ export const formatNumber = (num) =>
 export const formatDate = (dateStr) => {
   if (!dateStr) return 'N/A';
   const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
+  if (isNaN(d.getTime())) return typeof dateStr === 'string' ? dateStr : 'N/A';
   return d.toLocaleDateString('en-IN', {
     day: '2-digit', month: 'short', year: 'numeric'
   });

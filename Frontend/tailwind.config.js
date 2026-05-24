@@ -3,11 +3,23 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        themed: {
+          bg:      'var(--bg-primary)',
+          surface: 'var(--bg-surface)',
+          surface2:'var(--bg-surface2)',
+          border:  'var(--border-color)',
+          text:    'var(--text-primary)',
+          muted:   'var(--text-muted)',
+          dim:     'var(--text-dim)',
+          brand:   'var(--brand-primary)',
+        }
+      },
       fontFamily: {
-        display: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Fira Code', 'Consolas', 'monospace'],
-        body: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Outfit', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+        body: ['Inter', 'sans-serif'],
       },
       fontSize: {
         'display-2xl': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],

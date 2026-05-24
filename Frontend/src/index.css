@@ -1,7 +1,40 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @config "../tailwind.config.js";
 
+:root {
+  --bg-primary:    #0a0a0a;
+  --bg-surface:    #1c1112;
+  --bg-surface2:   #2d1515;
+  --border-color:  #4b2020;
+  --text-primary:  #fef2f2;
+  --text-muted:    #fca5a5;
+  --text-dim:      #f87171;
+  --brand-primary: #dc2626;
+  --brand-hover:   #b91c1c;
+  --input-bg:      #0d0d0d;
+  --card-shadow:   rgba(220,38,38,0.1);
+}
+
+.themed-bg        { background-color: var(--bg-primary); }
+.themed-surface   { background-color: var(--bg-surface); }
+.themed-surface2  { background-color: var(--bg-surface2); }
+.themed-border    { border-color: var(--border-color); }
+.themed-text      { color: var(--text-primary); }
+.themed-muted     { color: var(--text-muted); }
+.themed-input     { background-color: var(--input-bg); }
+.themed-card      { 
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 24px var(--card-shadow);
+}
+
+
 @theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
   /* OrderPulse brand palette */
   --color-brand-50: #fef2f2;
   --color-brand-100: #fee2e2;
@@ -93,41 +126,14 @@
   }
 
   body {
-    font-family: var(--font-body);
-    font-weight: 400;
-    color: #fef2f2;
-    line-height: 1.6;
-    background-color: #0a0a0a;
+    @apply bg-background text-on-surface antialiased font-body;
+    background-color: #050404;
     background-image: radial-gradient(circle at 50% 0%, #1f0808 0%, transparent 50%);
     background-attachment: fixed;
-    min-height: 100vh;
   }
 
-  h1 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.15;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-  }
-
-  h3 {
-    font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.25;
-  }
-
-  h4, h5, h6 {
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
   }
 
   code, pre, kbd, samp {
@@ -392,7 +398,7 @@
   }
 
   .text-glow {
-    text-shadow: 0 0 24px rgba(220, 38, 38, 0.35);
+    text-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
   }
 
   .text-gradient-brand,
@@ -572,9 +578,9 @@
   .animate-live { animation: livePulse 1.5s ease-in-out infinite; }
 
   .tracking-logo { letter-spacing: -0.04em; }
-  .tracking-display { letter-spacing: -0.03em; }
+  .tracking-display { letter-spacing: -0.02em; }
   .tracking-ultra { letter-spacing: 0.2em; }
-  .tracking-extreme { letter-spacing: 0.3em; }
+  .tracking-extreme { letter-spacing: 0.4em; }
 }
 
 @keyframes fadeIn {
@@ -631,5 +637,48 @@
   50% {
     transform: scale(1.12);
     opacity: 0.75;
+  }
+}
+
+/* Glass loading & reveal for data panels */
+.glass-shimmer {
+  background: rgba(20, 15, 15, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(220, 38, 38, 0.06) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: glassShimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes glassShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.glass-reveal-in {
+  animation: glassRevealIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes glassRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }
