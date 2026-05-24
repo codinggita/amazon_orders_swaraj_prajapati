@@ -1,206 +1,212 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
 import { useAuth } from '../../hooks/useAuth';
 import AuthLayout from '../../components/layout/AuthLayout';
-import Input from '../../components/common/Input';
-import Button from '../../components/common/Button';
-import AppLogo from '../../components/common/AppLogo';
-import { Mail, Lock, User, Eye, EyeOff, Package, TrendingUp, Bell } from 'lucide-react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
+import { registerSchema } from '../../validation/authSchemas';
+import { Mail, Lock, User, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 
-const validationSchema = Yup.object({
-  name: Yup.string().required('Full Name is required').min(2, 'Name must be at least 2 characters'),
-  email: Yup.string().email('Invalid email address').required('Email is required'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(8, 'Password must be at least 8 characters')
-    .matches(/[A-Z]/, 'Must contain an uppercase letter')
-    .matches(/[0-9]/, 'Must contain a number')
-    .matches(/[@$!%*?&]/, 'Must contain a special character (@$!%*?&)'),
-  agreeTerms: Yup.boolean().oneOf([true], 'You must accept the terms'),
-});
+function FormField({ label, name, type = 'text', icon: Icon, error, touched, ...rest }) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const isPassword = type === 'password';
+  const inputType = isPassword && showPassword ? 'text' : type;
 
-const FEATURES = [
-  { icon: Package, text: 'Unified order management' },
-  { icon: TrendingUp, text: 'Revenue & analytics insights' },
-  { icon: Bell, text: 'Smart alerts & notifications' },
-];
+  return (
+    <div>
+      <label htmlFor={name} className="font-table-header text-[9px] tracking-[0.18em] text-red-400/50 block mb-1.5">
+        {label}
+      </label>
+      <div className="relative">
+        {Icon && (
+          <Icon className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-red-400/50 pointer-events-none" />
+        )}
+        <Field
+          id={name}
+          name={name}
+          type={inputType}
+          className={`font-body w-full bg-[#0d0d0d] border rounded-lg h-11 text-[13px] text-white pl-11 pr-4 placeholder:text-red-900/40 focus:outline-none focus:ring-1 transition-all ${
+            touched && error
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30'
+              : 'border-[#2d1515] focus:border-red-600 focus:ring-red-600/30'
+          } ${isPassword ? 'pr-11' : ''}`}
+          {...rest}
+        />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-red-400/50 hover:text-red-300"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        )}
+      </div>
+      {touched && error && (
+        <p className="font-body-xs text-red-400 mt-1.5 flex items-center gap-1">
+          <AlertTriangle className="w-3 h-3 shrink-0" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PasswordStrength({ password }) {
+  const getStrength = (pass) => {
+    if (!pass) return 0;
+    if (pass.length < 4) return 1;
+    if (pass.length < 8) return 2;
+    if (pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass)) return 4;
+    return 3;
+  };
+  const strength = getStrength(password);
+  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+  const colors = ['', 'text-red-500', 'text-orange-500', 'text-amber-400', 'text-green-500'];
+
+  if (!password) return null;
+
+  return (
+    <>
+      <div className="flex gap-1.5 h-1.5 mt-2">
+        {[1, 2, 3, 4].map((level) => (
+          <div
+            key={level}
+            className={`flex-1 rounded-full transition-colors ${
+              strength >= level
+                ? strength === 1
+                  ? 'bg-red-500'
+                  : strength === 2
+                    ? 'bg-orange-500'
+                    : strength === 3
+                      ? 'bg-amber-400'
+                      : 'bg-green-500'
+                : 'bg-[#2d1515]'
+            }`}
+          />
+        ))}
+      </div>
+      <p className={`font-badge text-right mt-1 ${colors[strength]}`}>{labels[strength]}</p>
+    </>
+  );
+}
 
 export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const { register, isLoggedIn, loading: authLoading } = useAuth();
+  const { register, isLoggedIn, loading } = useAuth();
   const navigate = useNavigate();
-
-  const formik = useFormik({
-    initialValues: { name: '', email: '', password: '', agreeTerms: false },
-    validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      const result = await register({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        confirmPassword: values.password,
-      });
-      if (result?.success) {
-        navigate(result.autoLogin ? '/dashboard' : '/login');
-      }
-      setSubmitting(false);
-    },
-  });
-
-  if (authLoading) {
-    return (
-      <AuthLayout>
-        <div className="flex justify-center py-20">
-          <div className="w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
-        </div>
-      </AuthLayout>
-    );
-  }
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const strength = getPasswordStrength(formik.values.password);
-
   return (
-    <AuthLayout wide>
-      <div className="grid lg:grid-cols-2 gap-8 items-center">
-        <div className="hidden lg:flex flex-col justify-center pr-8">
-          <AppLogo size="lg" showText showTagline />
-          <h2 className="font-hero text-4xl text-white mt-10 tracking-[-0.03em] leading-tight">
-            Start managing<br />
-            <span className="text-gradient-brand">orders smarter</span>
-          </h2>
-          <p className="font-body text-red-300/45 mt-4 max-w-sm leading-relaxed">
-            Join thousands of sellers using OrderPulse to track performance and grow revenue.
-          </p>
-          <ul className="mt-8 space-y-4">
-            {FEATURES.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-red-600/15 border border-red-800/30 flex items-center justify-center">
-                  <Icon className="w-4 h-4 text-red-400" />
-                </div>
-                <span className="font-body text-[14px] text-red-200/70">{text}</span>
-              </li>
-            ))}
-          </ul>
+    <AuthLayout
+      headline="Start your journey with OrderPulse"
+      subline="Create an account and unlock real-time order intelligence for your Amazon business."
+    >
+      <div className="glass-panel rounded-2xl p-8 sm:p-10">
+        <div className="mb-6 text-center lg:text-left">
+          <h1 className="font-hero text-[26px] text-white tracking-display leading-tight">
+            Create Account
+          </h1>
+          <p className="font-body-sm text-red-300/40 mt-1.5">Join OrderPulse today — it&apos;s free</p>
         </div>
 
-        <div className="glass-panel rounded-2xl p-8 md:p-10 shadow-2xl border border-[#4b2020]/60">
-          <div className="lg:hidden flex flex-col items-center mb-8">
-            <AppLogo size="md" showText showTagline />
-          </div>
+        <SocialAuthButtons dividerLabel="OR REGISTER WITH EMAIL" />
 
-          <div className="mb-8">
-            <h1 className="font-hero text-[28px] text-white tracking-[-0.03em] leading-tight">
-              Create Account
-            </h1>
-            <p className="font-body-sm text-[13px] text-red-300/50 mt-2">
-              Free to start — set up in under a minute
-            </p>
-          </div>
-
-          <form onSubmit={formik.handleSubmit} className="space-y-4">
-            <Input
-              label="Full Name"
-              name="name"
-              placeholder="John Doe"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              icon={User}
-              error={formik.touched.name && formik.errors.name ? formik.errors.name : null}
-            />
-
-            <Input
-              label="Email Address"
-              type="email"
-              name="email"
-              placeholder="you@orderpulse.com"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              icon={Mail}
-              error={formik.touched.email && formik.errors.email ? formik.errors.email : null}
-            />
-
-            <div className="space-y-2">
-              <Input
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                placeholder="••••••••"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                icon={Lock}
-                rightIcon={
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="p-0 border-0 bg-transparent text-red-400/60 hover:text-red-300">
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                }
-                error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
+        <Formik
+          initialValues={{ name: '', email: '', password: '', agreeTerms: false }}
+          validationSchema={registerSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            const result = await register({
+              name: values.name,
+              email: values.email,
+              password: values.password,
+              confirmPassword: values.password,
+            });
+            setSubmitting(false);
+            if (result?.success) navigate('/dashboard');
+          }}
+        >
+          {({ errors, touched, isSubmitting, values }) => (
+            <Form className="space-y-5">
+              <FormField
+                label="FULL NAME"
+                name="name"
+                icon={User}
+                placeholder="John Doe"
+                error={errors.name}
+                touched={touched.name}
+                autoComplete="name"
               />
-              <div className="flex gap-1.5 h-1.5">
-                {[1, 2, 3, 4].map((level) => (
-                  <div
-                    key={level}
-                    className={`flex-1 rounded-full transition-colors ${
-                      strength >= level
-                        ? strength === 1 ? 'bg-red-500'
-                        : strength === 2 ? 'bg-orange-500'
-                        : strength === 3 ? 'bg-amber-400'
-                        : 'bg-emerald-500'
-                        : 'bg-[#2d1515]'
-                    }`}
-                  />
-                ))}
+
+              <FormField
+                label="EMAIL ADDRESS"
+                name="email"
+                type="email"
+                icon={Mail}
+                placeholder="john@example.com"
+                error={errors.email}
+                touched={touched.email}
+                autoComplete="email"
+              />
+
+              <div>
+                <FormField
+                  label="PASSWORD"
+                  name="password"
+                  type="password"
+                  icon={Lock}
+                  placeholder="••••••••"
+                  error={errors.password}
+                  touched={touched.password}
+                  autoComplete="new-password"
+                />
+                <PasswordStrength password={values.password} />
               </div>
-            </div>
 
-            <label className="flex items-start gap-3 cursor-pointer pt-1">
-              <input
-                type="checkbox"
-                name="agreeTerms"
-                checked={formik.values.agreeTerms}
-                onChange={formik.handleChange}
-                className="mt-1 rounded border-[#4b2020] bg-[#0d0d0d] text-brand-600 focus:ring-brand-500/30"
-              />
-              <span className="font-body-xs text-[12px] leading-relaxed opacity-90">
-                I agree to the Terms of Service and Privacy Policy
-              </span>
-            </label>
-            {formik.touched.agreeTerms && formik.errors.agreeTerms && (
-              <p className="font-body-xs text-red-500">{formik.errors.agreeTerms}</p>
-            )}
+              <div>
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <Field
+                    type="checkbox"
+                    name="agreeTerms"
+                    className="mt-1 rounded border-[#4b2020] bg-[#1c1112] text-brand-600 focus:ring-brand-500/30"
+                  />
+                  <span className="font-body-sm text-red-300/60 leading-relaxed">
+                    I agree to the{' '}
+                    <span className="text-red-400 hover:underline">Terms of Service</span> and{' '}
+                    <span className="text-red-400 hover:underline">Privacy Policy</span>
+                  </span>
+                </label>
+                {touched.agreeTerms && errors.agreeTerms && (
+                  <p className="font-body-xs text-red-400 mt-1.5">{errors.agreeTerms}</p>
+                )}
+              </div>
 
-            <Button type="submit" className="w-full h-12 mt-4" loading={formik.isSubmitting}>
-              <span className="font-btn text-[14px]">Create Account</span>
-            </Button>
-          </form>
+              <button
+                type="submit"
+                disabled={isSubmitting || loading}
+                className="btn-gradient-auth w-full flex items-center justify-center"
+              >
+                <span className="font-btn">
+                  {isSubmitting || loading ? 'Creating account…' : 'Create Account'}
+                </span>
+              </button>
+            </Form>
+          )}
+        </Formik>
 
-          <div className="mt-8 pt-6 border-t border-[#2d1515] text-center">
-            <span className="font-body-sm text-[13px] text-red-300/45">
-              Already have an account?{' '}
-              <Link to="/login" className="text-red-400 font-semibold hover:text-red-300 transition-colors">
-                Sign In
-              </Link>
-            </span>
-          </div>
-        </div>
+        <p className="font-body-sm text-red-300/40 text-center mt-8">
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            className="font-body-sm text-red-400 font-semibold hover:text-red-300 transition-colors"
+          >
+            Sign In
+          </Link>
+        </p>
       </div>
     </AuthLayout>
   );
-}
-
-function getPasswordStrength(pass) {
-  if (!pass) return 0;
-  if (pass.length < 4) return 1;
-  if (pass.length < 8) return 2;
-  if (pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass) && /[@$!%*?&]/.test(pass)) return 4;
-  if (pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass)) return 3;
-  return 2;
 }

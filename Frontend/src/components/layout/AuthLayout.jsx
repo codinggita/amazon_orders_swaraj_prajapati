@@ -1,25 +1,73 @@
 import React from 'react';
-import { cn } from '../../utils/helpers';
+import AppLogo from '../common/AppLogo';
+import { BarChart3, Shield, Zap } from 'lucide-react';
 
-export default function AuthLayout({ children, wide = false }) {
+const FEATURES = [
+  { icon: BarChart3, title: 'Real-time Analytics', desc: 'Live revenue & order metrics' },
+  { icon: Shield, title: 'Secure & Reliable', desc: 'Enterprise-grade data protection' },
+  { icon: Zap, title: 'Lightning Fast', desc: 'Optimized for Amazon sellers' },
+];
+
+export default function AuthLayout({ children, headline, subline }) {
   return (
-    <div
-      className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-6 text-white relative overflow-hidden"
-      style={{
-        background: 'radial-gradient(ellipse 90% 60% at 50% -15%, rgba(127, 29, 29, 0.4) 0%, transparent 55%), #0a0a0a',
-      }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.35]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(75, 32, 32, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(75, 32, 32, 0.12) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-red-600/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className={cn('relative z-10 w-full', wide ? 'max-w-5xl' : 'max-w-md')}>
-        {children}
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col lg:flex-row relative overflow-hidden">
+      {/* Breathing crimson ambient lights */}
+      <div className="breathing-crimson breathing-crimson-1 pointer-events-none" aria-hidden />
+      <div className="breathing-crimson breathing-crimson-2 pointer-events-none" aria-hidden />
+
+      <div className="auth-brand-panel hidden lg:flex lg:w-[48%] xl:w-[52%] flex-col justify-between p-12 xl:p-16 relative overflow-hidden z-[1]">
+        <div className="relative z-10">
+          <AppLogo size="lg" showTagline />
+        </div>
+
+        <div className="relative z-10 space-y-8 my-12">
+          <div>
+            <p className="font-label text-red-500/80 tracking-extreme text-[10px] mb-4">
+              THE HEARTBEAT OF YOUR BUSINESS
+            </p>
+            <h1 className="font-hero text-3xl xl:text-[2.75rem] text-white leading-[1.15] tracking-display font-medium">
+              {headline || (
+                <>
+                  Manage orders with
+                  <br />
+                  <span className="text-gradient-brand font-semibold">precision & clarity</span>
+                </>
+              )}
+            </h1>
+            <p className="font-body text-red-300/40 mt-4 max-w-md text-[14px]">
+              {subline ||
+                'OrderPulse gives Amazon sellers a premium command center for orders, analytics, and fulfillment.'}
+            </p>
+          </div>
+
+          <ul className="space-y-4">
+            {FEATURES.map(({ icon: Icon, title, desc }) => (
+              <li key={title} className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-red-950/60 border border-red-900/40 flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-red-400" />
+                </div>
+                <div>
+                  <p className="font-subheading text-sm text-white">{title}</p>
+                  <p className="font-body-sm text-red-300/40 mt-0.5">{desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="font-body-xs text-red-800/60 relative z-10">
+          © {new Date().getFullYear()} OrderPulse. All rights reserved.
+        </p>
+      </div>
+
+      <div className="auth-form-panel flex-1 flex flex-col min-h-screen relative z-[1]">
+        <div className="lg:hidden p-6 flex justify-center border-b border-[#2d1515]">
+          <AppLogo size="md" showTagline />
+        </div>
+
+        <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
+          <div className="w-full max-w-md animate-slide-up">{children}</div>
+        </div>
       </div>
     </div>
   );

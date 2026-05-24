@@ -15,7 +15,10 @@ export default function AppLayout() {
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        <Navbar
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          sidebarCollapsed={sidebarCollapsed}
+        />
         <main className="flex-1 overflow-y-auto custom-scrollbar p-6">
           <div className="max-w-7xl mx-auto">
             <Outlet />

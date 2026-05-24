@@ -32,7 +32,7 @@ export default function Table({ columns, data, loading, emptyMessage = "No data 
         <thead className="bg-[#2d1515]">
           <tr>
             {columns.map((col, idx) => (
-              <th key={col.key || idx} className="font-table-header text-[9px] tracking-[0.15em] text-red-400/40 px-4 py-3 text-left whitespace-nowrap">
+              <th key={col.key || idx} className="font-table-header text-red-400/50 px-4 py-3 text-left whitespace-nowrap">
                 {col.label}
               </th>
             ))}
@@ -46,7 +46,7 @@ export default function Table({ columns, data, loading, emptyMessage = "No data 
               className={cn('transition-colors duration-150', onRowClick ? 'cursor-pointer hover:bg-red-950/20' : 'hover:bg-red-950/10')}
             >
               {columns.map((col, colIdx) => (
-                <td key={col.key || colIdx} className="font-body px-4 py-3.5 text-[13px] text-red-100/80">
+                <td key={col.key || colIdx} className="px-4 py-3.5 text-sm text-red-100/80">
                   {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </td>
               ))}
