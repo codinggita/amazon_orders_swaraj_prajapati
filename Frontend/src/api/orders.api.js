@@ -23,4 +23,6 @@ export const ordersAPI = {
   getRefunded:  (params) => api.get('/orders/refunded', { params }),
   getByCustomer:(id, params) => api.get(`/orders/customer/${id}`, { params }),
   getByProduct: (id, params) => api.get(`/orders/product/${id}`, { params }),
+  filterByStatus: (type, params) => api.get('/orders/filter/status', { params: { type, ...params } }),
+  filterByPayment: (method, params) => api.get('/orders/filter/payment', { params: { method, ...params } }),
 };

@@ -24,19 +24,19 @@ export default function OrderTable({ orders, loading, onEdit, onDelete, selected
       render: (_, row) => (
         <input 
           type="checkbox" 
-          checked={selectedRows?.has(row.OrderID || row._id)}
-          onChange={(e) => onSelectRow(row.OrderID || row._id, e.target.checked)}
+          checked={selectedRows?.has(row._id || row.OrderID)}
+          onChange={(e) => onSelectRow(row._id || row.OrderID, e.target.checked)}
           onClick={(e) => e.stopPropagation()}
           className="rounded border-[#4b2020] bg-[#1c1112] text-brand-600 focus:ring-brand-500/30"
         />
       )
     },
-    { key: 'OrderID', label: 'Order ID', render: (val) => <span className="font-order-id text-red-400 hover:text-red-300">#{val}</span> },
-    { key: 'CustomerName', label: 'Customer', render: (val) => <span className="font-body text-[13px]">{val}</span> },
-    { key: 'ProductName', label: 'Product', render: (val) => <span className="font-body text-[13px]" title={val}>{truncate(val, 20)}</span> },
-    { key: 'TotalAmount', label: 'Amount', render: (val) => <span className="font-currency text-[13px] text-white tabular-nums">{formatCurrency(val)}</span> },
+    { key: 'OrderID', label: 'Order ID', render: (val) => <span className="font-mono text-brand-400">#{val}</span> },
+    { key: 'CustomerName', label: 'Customer' },
+    { key: 'ProductName', label: 'Product', render: (val) => <span title={val}>{truncate(val, 20)}</span> },
+    { key: 'TotalAmount', label: 'Amount', render: (val) => <span className="font-medium text-white">{formatCurrency(val)}</span> },
     { key: 'OrderStatus', label: 'Status', render: (val) => <OrderStatusBadge status={val} /> },
-    { key: 'OrderDate', label: 'Date', render: (val) => <span className="font-timestamp text-red-200/60">{formatDate(val)}</span> },
+    { key: 'OrderDate', label: 'Date', render: (val) => <span className="text-red-200/60">{formatDate(val)}</span> },
     {
       key: 'actions',
       label: 'Actions',
