@@ -8,7 +8,7 @@ export default function AppLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0a0a0a] text-white">
+    <div className="flex h-screen overflow-hidden themed-bg themed-text">
       <Sidebar 
         isOpen={sidebarOpen} 
         isCollapsed={sidebarCollapsed} 
