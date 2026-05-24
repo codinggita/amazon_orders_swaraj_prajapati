@@ -30,24 +30,23 @@ const jwt  = require('jsonwebtoken');
      await req.user.save(); 
  
      // Build user data for frontend 
-     const userData = { 
-       id:              req.user._id, 
-       name:            req.user.name, 
-       email:           req.user.email, 
-       role:            req.user.role, 
-       isEmailVerified: req.user.isEmailVerified, 
-       avatarUrl:       req.user.avatarUrl, 
-       authProvider:    'google', 
-     }; 
- 
-     // Redirect to frontend with tokens in URL params 
-     // Frontend will extract and store in localStorage 
-     const params = new URLSearchParams({ 
-       token:        accessToken, 
-       refreshToken: refreshToken, 
-       user:         JSON.stringify(userData), 
-       provider:     'google', 
-     }); 
+    const userData = {
+      id:              String(req.user._id),
+      name:            req.user.name,
+      email:           req.user.email,
+      role:            req.user.role,
+      isEmailVerified: req.user.isEmailVerified,
+      avatarUrl:       req.user.avatarUrl,
+      googleId:        req.user.googleId,
+      authProvider:    req.user.authProvider || 'google',
+    };
+
+    const params = new URLSearchParams({
+      token:        accessToken,
+      refreshToken: refreshToken,
+      user:         encodeURIComponent(JSON.stringify(userData)),
+      provider:     'google',
+    });
  
      res.redirect( 
        `${process.env.FRONTEND_URL}/auth/callback?${params.toString()}` 
@@ -75,22 +74,23 @@ const jwt  = require('jsonwebtoken');
      req.user.refreshToken = refreshToken; 
      await req.user.save(); 
  
-     const userData = { 
-       id:              req.user._id, 
-       name:            req.user.name, 
-       email:           req.user.email, 
-       role:            req.user.role, 
-       isEmailVerified: req.user.isEmailVerified, 
-       avatarUrl:       req.user.avatarUrl, 
-       authProvider:    'facebook', 
-     }; 
- 
-     const params = new URLSearchParams({ 
-       token:        accessToken, 
-       refreshToken: refreshToken, 
-       user:         JSON.stringify(userData), 
-       provider:     'facebook', 
-     }); 
+    const userData = {
+      id:              String(req.user._id),
+      name:            req.user.name,
+      email:           req.user.email,
+      role:            req.user.role,
+      isEmailVerified: req.user.isEmailVerified,
+      avatarUrl:       req.user.avatarUrl,
+      facebookId:      req.user.facebookId,
+      authProvider:    req.user.authProvider || 'facebook',
+    };
+
+    const params = new URLSearchParams({
+      token:        accessToken,
+      refreshToken: refreshToken,
+      user:         encodeURIComponent(JSON.stringify(userData)),
+      provider:     'facebook',
+    });
  
      res.redirect( 
        `${process.env.FRONTEND_URL}/auth/callback?${params.toString()}` 

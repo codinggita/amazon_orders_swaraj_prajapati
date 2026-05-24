@@ -12,31 +12,32 @@ export default function AppLogo({
   const [imgError, setImgError] = useState(false);
 
   const sizes = {
-    sm: { box: 'w-8 h-8', icon: 'w-4 h-4', title: 'text-[15px]', tag: 'text-[7px]' },
-    md: { box: 'w-10 h-10', icon: 'w-5 h-5', title: 'text-[18px]', tag: 'text-[8px]' },
-    lg: { box: 'w-16 h-16', icon: 'w-8 h-8', title: 'text-2xl', tag: 'text-[10px]' },
+    sm: { box: 'w-9 h-9', icon: 'w-4 h-4', title: 'text-[15px]', tag: 'text-[7px]' },
+    md: { box: 'w-11 h-11', icon: 'w-5 h-5', title: 'text-[18px]', tag: 'text-[8px]' },
+    lg: { box: 'w-20 h-20', icon: 'w-10 h-10', title: 'text-4xl', tag: 'text-[10px]' },
+    xl: { box: 'w-24 h-24', icon: 'w-12 h-12', title: 'text-5xl', tag: 'text-xs' },
   };
   const s = sizes[size] || sizes.md;
 
   return (
-    <div className={cn('flex items-center gap-2.5', className)}>
+    <div className={cn('flex items-center gap-3', className)}>
       <div
         className={cn(
           s.box,
-          'rounded-xl flex items-center justify-center shrink-0',
-          'bg-gradient-to-br from-red-600/20 to-red-950/40',
-          'border border-red-800/40 shadow-lg shadow-red-900/30'
+          'rounded-xl flex items-center justify-center shrink-0 overflow-hidden',
+          'bg-[#1c1112] border border-red-800/50',
+          'shadow-lg shadow-red-900/40 ring-1 ring-red-600/20'
         )}
       >
         {!imgError ? (
           <img
             src="/logo.svg"
             alt="OrderPulse"
-            className="w-[70%] h-[70%] object-contain"
+            className="w-full h-full object-contain p-1.5"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full rounded-lg bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center">
             <Activity className={cn(s.icon, 'text-white')} />
           </div>
         )}
@@ -44,17 +45,17 @@ export default function AppLogo({
 
       {showText && !collapsed && (
         <div className="flex flex-col leading-none min-w-0">
-          <span className={cn('font-logo text-white tracking-[-0.04em]', s.title)}>
+          <span className={cn('font-logo text-white tracking-logo', s.title)}>
             Order<span className="text-gradient-brand">Pulse</span>
           </span>
           {showTagline && (
             <span
               className={cn(
-                'font-label text-red-600/50 tracking-[0.2em] mt-1 block uppercase',
+                'font-nav-label text-red-500/60 tracking-ultra mt-1.5 block',
                 s.tag
               )}
             >
-              The Heartbeat of Your Business
+              Smart Order Management
             </span>
           )}
         </div>

@@ -6,7 +6,7 @@ const Input = React.forwardRef(({ label, error, icon: Icon, rightIcon: RightIcon
   return (
     <div className="w-full">
       {label && (
-        <label className="font-table-header text-[9px] tracking-[0.18em] text-red-400/50 uppercase block mb-1.5">
+        <label className="font-table-header text-[9px] tracking-[0.18em] text-red-400/50 block mb-1.5">
           {label}
         </label>
       )}
@@ -20,7 +20,7 @@ const Input = React.forwardRef(({ label, error, icon: Icon, rightIcon: RightIcon
             error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : 'border-[#2d1515] focus:border-red-600 focus:ring-red-600/30',
             Icon ? 'pl-11' : 'px-4',
             RightIcon ? 'pr-11' : 'pr-4',
-            'font-body text-[13px] placeholder:text-red-900/30',
+            'font-body text-[13px] placeholder:text-red-900/40',
             className
           )}
           {...rest}

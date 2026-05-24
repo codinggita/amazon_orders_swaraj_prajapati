@@ -24,21 +24,38 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const persistSession = (newToken, newUser) => {
+  const persistSession = (newToken, newUser, refreshToken) => {
     if (newToken) {
       setToken(newToken);
       localStorage.setItem('orderpulse_token', newToken);
     }
-    if (newUser) {
-      setUser(newUser);
-      localStorage.setItem('orderpulse_user', JSON.stringify(newUser));
+    if (refreshToken) {
+      localStorage.setItem('orderpulse_refresh_token', refreshToken);
     }
+    if (newUser) {
+      const normalized = {
+        ...newUser,
+        id: newUser.id || newUser._id,
+      };
+      setUser(normalized);
+      localStorage.setItem('orderpulse_user', JSON.stringify(normalized));
+      if (normalized.avatarUrl) {
+        localStorage.setItem('orderpulse_avatar_url', normalized.avatarUrl);
+      }
+    }
+  };
+
+  const setOAuthSession = (accessToken, userData, refreshToken) => {
+    persistSession(accessToken, userData, refreshToken);
   };
 
   const updateUser = (partial) => {
     setUser((prev) => {
       const next = { ...prev, ...partial };
       localStorage.setItem('orderpulse_user', JSON.stringify(next));
+      if (partial.avatarUrl) {
+        localStorage.setItem('orderpulse_avatar_url', partial.avatarUrl);
+      }
       return next;
     });
   };
@@ -47,12 +64,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await authAPI.login(data);
       if (res.data?.success) {
-        const { accessToken, token: legacyToken, user: newUser } = res.data.data;
+        const { accessToken, token: legacyToken, refreshToken, user: newUser } = res.data.data;
         const newToken = accessToken || legacyToken;
-        persistSession(newToken, newUser);
+        persistSession(newToken, newUser, refreshToken);
         toast.success(res.data.message || 'Logged in successfully');
         return true;
       }
+      toast.error(res.data?.message || 'Login failed');
       return false;
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
@@ -64,14 +82,15 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await authAPI.register(data);
       if (res.data?.success) {
-        const { accessToken, token: legacyToken, user: newUser } = res.data.data || {};
+        const { accessToken, token: legacyToken, refreshToken, user: newUser } = res.data.data || {};
         const newToken = accessToken || legacyToken;
         if (newToken && newUser) {
-          persistSession(newToken, newUser);
+          persistSession(newToken, newUser, refreshToken);
         }
         toast.success(res.data.message || 'Registration successful');
         return { success: true, autoLogin: !!(newToken && newUser) };
       }
+      toast.error(res.data?.message || 'Registration failed');
       return { success: false };
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -89,6 +108,8 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem('orderpulse_token');
       localStorage.removeItem('orderpulse_user');
+      localStorage.removeItem('orderpulse_refresh_token');
+      localStorage.removeItem('orderpulse_avatar_url');
       window.location.href = '/login';
     }
   };
@@ -103,13 +124,10 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    setOAuthSession,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

@@ -5,7 +5,7 @@ import { cn } from '../../utils/helpers';
 export default function Badge({ children, variant = 'status', color, className, dot, count }) {
   if (variant === 'count') {
     return (
-      <span className={cn('font-badge bg-brand-600 text-white rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5 tabular-nums', className)}>
+      <span className={cn('bg-brand-600 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5 font-bold', className)}>
         {count ?? children}
       </span>
     );
