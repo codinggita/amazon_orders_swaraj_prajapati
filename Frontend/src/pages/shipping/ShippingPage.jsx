@@ -3,10 +3,11 @@ import { shippingAPI } from '../../api/shipping.api';
 import { ordersAPI } from '../../api/orders.api';
 import PageHeader from '../../components/layout/PageHeader';
 import Card from '../../components/common/Card';
-import Spinner from '../../components/common/Spinner';
+import GlassContent from '../../components/common/GlassContent';
 import EmptyState from '../../components/common/EmptyState';
 import Modal from '../../components/common/Modal';
 import Pagination from '../../components/common/Pagination';
+import Spinner from '../../components/common/Spinner';
 import OrderStatusBadge from '../../components/features/orders/OrderStatusBadge';
 import { formatDate } from '../../utils/formatters';
 import { Truck, Package, Check, Eye } from 'lucide-react';
@@ -29,12 +30,21 @@ const getCarrier = (method) =>
     Wallet: 'Delhivery',
   })[method] || 'ShipRocket';
 
-/** Normalize list + total from orders vs shipping API shapes */
+/** Normalize list + total from orders vs shipping API shapes with extreme safety */
 function parseListResponse(res) {
-  const body = res?.data ?? {};
-  const list = body.data ?? body.orders ?? [];
+  if (!res) return { list: [], total: 0 };
+  const body = res.data ?? res ?? {};
+  
+  let list = [];
+  if (Array.isArray(body)) {
+    list = body;
+  } else if (body && typeof body === 'object') {
+    list = body.data ?? body.orders ?? body.list ?? [];
+  }
+  
+  if (!Array.isArray(list)) list = [];
   const total = body.total ?? list.length ?? 0;
-  return { list: Array.isArray(list) ? list : [], total };
+  return { list, total };
 }
 
 export default function ShippingPage() {
@@ -54,6 +64,7 @@ export default function ShippingPage() {
     try {
       let res;
       const params = { page, limit, sort: '-date' };
+      console.log('ShippingPage: Fetching shipments with activeTab =', activeTab, 'params =', params);
 
       switch (activeTab) {
         case 'pending':
@@ -69,11 +80,14 @@ export default function ShippingPage() {
           res = await ordersAPI.getAll(params);
       }
 
+      console.log('ShippingPage: Received response =', res);
       const { list, total: totalCount } = parseListResponse(res);
+      console.log('ShippingPage: Parsed shipments count =', list.length, 'total count =', totalCount);
+      
       setShipments(list);
       setTotal(totalCount);
     } catch (err) {
-      console.error('Shipments fetch error:', err);
+      console.error('ShippingPage: Shipments fetch error:', err);
       toast.error(err.response?.data?.message || 'Failed to load shipments');
       setShipments([]);
       setTotal(0);
@@ -89,20 +103,24 @@ export default function ShippingPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        console.log('ShippingPage: Fetching stats on mount...');
         const [pendingRes, deliveredRes, returnedRes, allRes] = await Promise.all([
           shippingAPI.getPending({ page: 1, limit: 1 }),
           shippingAPI.getDelivered({ page: 1, limit: 1 }),
           shippingAPI.getReturned({ page: 1, limit: 1 }),
           ordersAPI.getAll({ page: 1, limit: 1 }),
         ]);
-        setStats({
-          pending: parseListResponse(pendingRes).total,
-          delivered: parseListResponse(deliveredRes).total,
-          returned: parseListResponse(returnedRes).total,
-          total: parseListResponse(allRes).total,
-        });
-      } catch {
-        /* keep previous stats */
+        
+        const pending = parseListResponse(pendingRes).total;
+        const delivered = parseListResponse(deliveredRes).total;
+        const returned = parseListResponse(returnedRes).total;
+        const total = parseListResponse(allRes).total;
+        
+        console.log('ShippingPage: Mount stats successfully loaded:', { pending, delivered, returned, total });
+        
+        setStats({ pending, delivered, returned, total });
+      } catch (err) {
+        console.error('ShippingPage: Mount stats load error:', err);
       }
     };
     fetchStats();
@@ -167,7 +185,7 @@ export default function ShippingPage() {
             </div>
             <div>
               <p className="kpi-label text-[9px] mb-1">{stat.label}</p>
-              <p className="font-metric text-xl text-white tabular-nums">{stat.value.toLocaleString('en-IN')}</p>
+              <p className="font-metric text-xl text-white tabular-nums">{(stat.value ?? 0).toLocaleString('en-IN')}</p>
             </div>
           </div>
         ))}
@@ -187,14 +205,15 @@ export default function ShippingPage() {
           >
             {tab.label}
             {tab.id === 'all' && stats.total > 0 && activeTab !== 'all' && (
-              <span className="ml-1 opacity-60">({stats.total.toLocaleString('en-IN')})</span>
+              <span className="ml-1 opacity-60">({(stats.total ?? 0).toLocaleString('en-IN')})</span>
             )}
           </button>
         ))}
       </div>
 
+      <GlassContent loading={loading} minHeight="280px" empty={!loading && shipments.length === 0}>
       <Card padding="p-0" className="glass-panel border-[#4b2020]/50">
-        <div className="overflow-x-auto min-h-[200px]">
+        <div className="overflow-x-auto min-h-[200px] glass-reveal-in">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#2d1515]">
               <tr>
@@ -206,17 +225,7 @@ export default function ShippingPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2d1515]">
-              {loading ? (
-                Array(5)
-                  .fill(0)
-                  .map((_, i) => (
-                    <tr key={i}>
-                      <td colSpan={7} className="p-4">
-                        <div className="h-4 bg-red-950/30 animate-pulse rounded w-full" />
-                      </td>
-                    </tr>
-                  ))
-              ) : shipments.length === 0 ? (
+              {shipments.filter(Boolean).length === 0 ? (
                 <tr>
                   <td colSpan={7}>
                     <EmptyState
@@ -231,7 +240,7 @@ export default function ShippingPage() {
                   </td>
                 </tr>
               ) : (
-                shipments.map((order) => {
+                shipments.filter(Boolean).map((order) => {
                   const estDate = order.OrderDate
                     ? new Date(new Date(order.OrderDate).getTime() + 7 * 24 * 60 * 60 * 1000)
                     : null;
@@ -274,6 +283,7 @@ export default function ShippingPage() {
           </table>
         </div>
       </Card>
+      </GlassContent>
 
       {!loading && total > 0 && (
         <div className="mt-4">

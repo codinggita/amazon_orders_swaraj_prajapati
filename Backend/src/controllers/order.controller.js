@@ -6,7 +6,8 @@ class OrderController {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const sort = req.query.sort || null;
-      const result = await orderService.getAllOrders(page, limit, sort);
+      const q = req.query.q || null;
+      const result = await orderService.getAllOrders(page, limit, sort, q);
       res.status(200).json({
         success: true, 
         message: "Orders retrieved successfully",
