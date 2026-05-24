@@ -72,6 +72,25 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date
     },
+    googleId: {
+      type: String,
+      sparse: true,
+      index: true
+    },
+    facebookId: {
+      type: String,
+      sparse: true,
+      index: true
+    },
+    avatarUrl: {
+      type: String,
+      default: null
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google", "facebook", "both"],
+      default: "local"
+    },
     createdAt: {
       type: Date,
       default: Date.now
