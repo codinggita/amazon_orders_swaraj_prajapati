@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PageHeader from '../../components/layout/PageHeader';
 import OrderFilters from '../../components/features/orders/OrderFilters';
 import OrderTable from '../../components/features/orders/OrderTable';
-import CreateOrderModal from '../../components/features/orders/CreateOrderModal';
 import Pagination from '../../components/common/Pagination';
 import Button from '../../components/common/Button';
 import { Search, Plus, Filter, Download } from 'lucide-react';
 import useFetch from '../../hooks/useFetch';
 import { ordersAPI } from '../../api/orders.api';
 import useDebounce from '../../hooks/useDebounce';
+import GlassContent from '../../components/common/GlassContent';
+import { parseOrdersList } from '../../utils/apiHelpers';
+import CreateOrderModal from '../../components/features/orders/CreateOrderModal';
 
 export default function OrdersPage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ status: '', payment: '' });
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 400);
 
-  const { data, loading, refetch } = useFetch(
-    () => ordersAPI.getAll({ page, limit, sort: '-OrderDate', q: debouncedSearch, ...filters }),
-    [page, limit, debouncedSearch, filters]
-  );
+  const fetchOrders = useCallback(() => {
+    const params = { page, limit, sort: '-OrderDate' };
+    if (filters.status) {
+      return ordersAPI.filterByStatus(filters.status, params);
+    }
+    if (filters.payment) {
+      return ordersAPI.filterByPayment(filters.payment, params);
+    }
+    return ordersAPI.getAll({ ...params, q: debouncedSearch || undefined });
+  }, [page, limit, debouncedSearch, filters.status, filters.payment]);
 
-  const orders = data?.data || [];
-  const total = data?.total || 0;
+  const { data, loading, refetch } = useFetch(fetchOrders, [
+    page,
+    limit,
+    debouncedSearch,
+    filters.status,
+    filters.payment,
+  ]);
+
+  const { orders, total } = data ? parseOrdersList({ data }) : { orders: [], total: 0 };
   const totalPages = Math.ceil(total / limit);
 
   const handleFilterChange = (key, value) => {
@@ -35,9 +50,8 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <PageHeader
-        label="ORDER MANAGEMENT"
-        title="All Orders"
+      <PageHeader 
+        title="All Orders" 
         actions={
           <>
             <div className="relative mr-2 hidden md:block">
@@ -53,16 +67,8 @@ export default function OrdersPage() {
             <Button variant="secondary" icon={Filter} onClick={() => setShowFilters(!showFilters)}>
               Filters
             </Button>
-            <Button variant="secondary" icon={Download} onClick={() => {
-              const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(orders));
-              const downloadAnchorNode = document.createElement('a');
-              downloadAnchorNode.setAttribute("href",     dataStr);
-              downloadAnchorNode.setAttribute("download", "orders_export.json");
-              document.body.appendChild(downloadAnchorNode); 
-              downloadAnchorNode.click();
-              downloadAnchorNode.remove();
-            }}>Export</Button>
-            <Button icon={Plus} onClick={() => setShowCreateModal(true)}>New Order</Button>
+            <Button variant="secondary" icon={Download}>Export</Button>
+            <Button icon={Plus} onClick={() => setIsCreateModalOpen(true)}>New Order</Button>
           </>
         } 
       />
@@ -75,15 +81,17 @@ export default function OrdersPage() {
         />
       )}
 
-      <OrderTable 
-        orders={orders} 
-        loading={loading}
-        selectedRows={new Set()}
-        onSelectRow={() => {}}
-        onSelectAll={() => {}}
-      />
+      <GlassContent loading={loading} minHeight="280px" empty={!loading && orders.length === 0}>
+        <OrderTable
+          orders={orders}
+          loading={false}
+          selectedRows={new Set()}
+          onSelectRow={() => {}}
+          onSelectAll={() => {}}
+        />
+      </GlassContent>
 
-      <div className="mt-6">
+      <div className="mt-6 glass-reveal-in">
         <Pagination 
           page={page} 
           totalPages={totalPages} 
@@ -95,9 +103,9 @@ export default function OrdersPage() {
       </div>
 
       <CreateOrderModal 
-        show={showCreateModal} 
-        onClose={() => setShowCreateModal(false)} 
-        onSuccess={refetch} 
+        show={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        onSuccess={() => { setIsCreateModalOpen(false); refetch(); }} 
       />
     </div>
   );
