@@ -107,10 +107,10 @@ export default function RegisterPage() {
     >
       <div className="glass-panel rounded-2xl p-8 sm:p-10">
         <div className="mb-6 text-center lg:text-left">
-          <h1 className="font-hero text-[26px] text-white tracking-display leading-tight">
+          <h1 className="font-display text-[26px] text-white tracking-display leading-tight font-bold">
             Create Account
           </h1>
-          <p className="font-body-sm text-red-300/40 mt-1.5">Join OrderPulse today — it&apos;s free</p>
+          <p className="font-body text-red-300/40 mt-1.5 text-[14px]">Join OrderPulse today — it&apos;s free</p>
         </div>
 
         <SocialAuthButtons dividerLabel="OR REGISTER WITH EMAIL" />
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                 label="FULL NAME"
                 name="name"
                 icon={User}
-                placeholder="John Doe"
+                placeholder="Enter your name"
                 error={errors.name}
                 touched={touched.name}
                 autoComplete="name"
@@ -146,7 +146,7 @@ export default function RegisterPage() {
                 name="email"
                 type="email"
                 icon={Mail}
-                placeholder="john@example.com"
+                placeholder="Enter your email"
                 error={errors.email}
                 touched={touched.email}
                 autoComplete="email"
@@ -173,7 +173,7 @@ export default function RegisterPage() {
                     name="agreeTerms"
                     className="mt-1 rounded border-[#4b2020] bg-[#1c1112] text-brand-600 focus:ring-brand-500/30"
                   />
-                  <span className="font-body-sm text-red-300/60 leading-relaxed">
+                  <span className="font-body text-sm text-red-300/60 leading-relaxed">
                     I agree to the{' '}
                     <span className="text-red-400 hover:underline">Terms of Service</span> and{' '}
                     <span className="text-red-400 hover:underline">Privacy Policy</span>
@@ -189,7 +189,7 @@ export default function RegisterPage() {
                 disabled={isSubmitting || loading}
                 className="btn-gradient-auth w-full flex items-center justify-center"
               >
-                <span className="font-btn">
+                <span className="font-display font-semibold">
                   {isSubmitting || loading ? 'Creating account…' : 'Create Account'}
                 </span>
               </button>
@@ -197,11 +197,11 @@ export default function RegisterPage() {
           )}
         </Formik>
 
-        <p className="font-body-sm text-red-300/40 text-center mt-8">
+        <p className="font-body text-red-300/40 text-center mt-8 text-sm">
           Already have an account?{' '}
           <Link
             to="/login"
-            className="font-body-sm text-red-400 font-semibold hover:text-red-300 transition-colors"
+            className="font-body text-red-400 font-semibold hover:text-red-300 transition-colors"
           >
             Sign In
           </Link>
