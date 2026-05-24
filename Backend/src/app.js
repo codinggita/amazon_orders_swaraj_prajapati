@@ -9,12 +9,14 @@ const analyticsRoutes = require("./routes/analytics.routes");
 const statsRoutes = require("./routes/stats.routes");
 const shippingRoutes = require("./routes/shipping.routes");
 const authRoutes = require("./routes/auth.routes");
+const oauthRoutes = require("./routes/oauth.routes");
 const adminRoutes = require("./routes/admin.routes");
 const bulkRoutes = require("./routes/bulk.routes");
 const errorRoutes = require("./routes/error.routes");
 const { getMaintenanceStatus } = require("./services/admin.service");
 const notFound = require("./middlewares/notFound.middleware");
 const errorHandler = require("./middlewares/errorHandler.middleware");
+const passport    = require("./config/passport");
 
 // ── New feature routers ──────────────────────────────────────────────────────
 const recommendationsRouter = require("./routes/recommendations.routes");
@@ -28,25 +30,24 @@ const systemRouter           = require("./routes/system.routes");
 const headOptionsRouter = require("./routes/headOptions.routes");
 
 app.use(express.json())
+app.use(passport.initialize());
 
-// ── HEAD / OPTIONS routes ─────────────────────────────────────────────────────
-// Mounted FIRST so HEAD handlers and specific OPTIONS handlers win over all
-// other route registrations (including auth-protected routes).
-app.use("/api/v1", headOptionsRouter);
-
-// ── Global OPTIONS fallback: catches any OPTIONS request not matched above ────
-// Uses app.use() with a method check because Express 5 (path-to-regexp v8)
-// does not support wildcard patterns in app.options().
+// ── Global CORS Middleware ───────────────────────────────────────────────────
 app.use((req, res, next) => {
-  if (req.method !== "OPTIONS") return next();
   res.set({
     "Access-Control-Allow-Origin":  "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Accept",
     "Access-Control-Max-Age":       "86400"
   });
-  res.status(204).end();
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
 });
+
+// ── HEAD / OPTIONS routes ─────────────────────────────────────────────────────
+app.use("/api/v1", headOptionsRouter);
 
 app.use((req, res, next) => {
   const maintenanceMode = getMaintenanceStatus();
@@ -73,6 +74,7 @@ app.use("/api/v1/stats", statsRoutes);
 app.use("/api/v1/shipping", shippingRoutes);
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/auth", oauthRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
 const validateRouter = require("./routes/validate.routes");
