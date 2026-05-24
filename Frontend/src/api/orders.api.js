@@ -1,0 +1,26 @@
+import api from './axios';
+
+export const ordersAPI = {
+  getAll:       (params) => api.get('/orders', { params }),
+  getById:      (id)     => api.get(`/orders/${id}`),
+  create:       (data)   => api.post('/orders', data),
+  update:       (id, data) => api.put(`/orders/${id}`, data),
+  patch:        (id, data) => api.patch(`/orders/${id}`, data),
+  delete:       (id)     => api.delete(`/orders/${id}`),
+  exists:       (id)     => api.get(`/orders/${id}/exists`),
+  getSummary:   (id)     => api.get(`/orders/${id}/summary`),
+  getItems:     (id)     => api.get(`/orders/${id}/items`),
+  getHistory:   (id)     => api.get(`/orders/${id}/history`),
+  archive:      (id)     => api.patch(`/orders/${id}/archive`),
+  restore:      (id)     => api.patch(`/orders/${id}/restore`),
+  cancel:       (id)     => api.post(`/orders/${id}/cancel`),
+  duplicate:    (id)     => api.post(`/orders/${id}/duplicate`),
+  getInvoice:   (id)     => api.get(`/orders/${id}/invoice`),
+  getPaged:     (params) => api.get('/orders/paged', { params }),
+  getInfinite:  (params) => api.get('/orders/infinite', { params }),
+  getRecent:    (params) => api.get('/orders/recent', { params }),
+  getCancelled: (params) => api.get('/orders/cancelled', { params }),
+  getRefunded:  (params) => api.get('/orders/refunded', { params }),
+  getByCustomer:(id, params) => api.get(`/orders/customer/${id}`, { params }),
+  getByProduct: (id, params) => api.get(`/orders/product/${id}`, { params }),
+};
