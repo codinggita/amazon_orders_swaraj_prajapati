@@ -1,10 +1,12 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import { selectIsLoggedIn, selectAuthLoading } from '../../store/slices/authSlice';
 import Spinner from '../common/Spinner';
 
 export default function ProtectedRoute({ children }) {
-  const { isLoggedIn, loading } = useAuth();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const loading = useSelector(selectAuthLoading);
   const location = useLocation();
 
   if (loading) {

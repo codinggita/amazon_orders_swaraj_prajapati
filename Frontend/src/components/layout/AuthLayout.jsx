@@ -25,16 +25,16 @@ export default function AuthLayout({ children, headline, subline }) {
             <p className="font-label text-red-500/80 tracking-extreme text-[10px] mb-4">
               THE HEARTBEAT OF YOUR BUSINESS
             </p>
-            <h1 className="font-hero text-3xl xl:text-[2.75rem] text-white leading-[1.15] tracking-display font-medium">
+            <h1 className="font-display text-3xl xl:text-[2.75rem] text-white leading-[1.15] tracking-display font-bold">
               {headline || (
                 <>
                   Manage orders with
                   <br />
-                  <span className="text-gradient-brand font-semibold">precision & clarity</span>
+                  <span className="text-gradient-brand font-extrabold">precision & clarity</span>
                 </>
               )}
             </h1>
-            <p className="font-body text-red-300/40 mt-4 max-w-md text-[14px]">
+            <p className="font-body text-red-300/50 mt-4 max-w-md text-[15px] leading-relaxed">
               {subline ||
                 'OrderPulse gives Amazon sellers a premium command center for orders, analytics, and fulfillment.'}
             </p>
@@ -47,8 +47,8 @@ export default function AuthLayout({ children, headline, subline }) {
                   <Icon className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="font-subheading text-sm text-white">{title}</p>
-                  <p className="font-body-sm text-red-300/40 mt-0.5">{desc}</p>
+                  <p className="font-display text-sm text-white font-semibold">{title}</p>
+                  <p className="font-body text-[13px] text-red-300/40 mt-0.5">{desc}</p>
                 </div>
               </li>
             ))}
