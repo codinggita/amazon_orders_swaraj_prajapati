@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import api from '../../api/axios';
 import PageHeader from '../../components/layout/PageHeader';
 import Card from '../../components/common/Card';
@@ -64,15 +64,18 @@ export default function StatsPage() {
   } = data;
 
   const statusColors = {
-    Delivered: '#16a34a',
-    Shipped: '#2563eb',
-    Pending: '#d97706',
-    Cancelled: '#dc2626',
-    Refunded: '#9333ea',
-    Returned: '#ea580c'
+    Delivered: '#10b981',
+    Shipped: '#3b82f6',
+    Pending: '#f59e0b',
+    Cancelled: '#ef4444',
+    Refunded: '#a855f7',
+    Returned: '#f97316',
+    'Out for Delivery': '#06b6d4'
   };
 
-  const statusData = ordersTotal.statusBreakdown ? Object.entries(ordersTotal.statusBreakdown).map(([name, value]) => ({ name, value })) : [];
+  const statusData = Array.isArray(ordersTotal.statusBreakdown) 
+    ? ordersTotal.statusBreakdown.map(item => ({ name: item.status, value: item.count }))
+    : [];
   const monthlyRevData = revenueMonthly.monthly ? revenueMonthly.monthly.map(item => ({ name: item.month, revenue: item.revenue })) : [];
 
   return (
@@ -105,26 +108,91 @@ export default function StatsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2 space-y-6">
           <Card title="Order Statistics">
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="w-48 h-48">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-2">
+              {/* Left: Donut Chart with Center Metric */}
+              <div className="w-48 h-48 flex-shrink-0 relative flex items-center justify-center">
                 {statusData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={statusData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={80}>
-                        {statusData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#dc2626'} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={statusData}
+                          dataKey="value"
+                          nameKey="name"
+                          innerRadius={65}
+                          outerRadius={85}
+                          paddingAngle={3}
+                          stroke="var(--bg-surface)"
+                          strokeWidth={2}
+                        >
+                          {statusData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={statusColors[entry.name] || 'var(--brand-primary)'} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip
+                          contentStyle={{
+                            backgroundColor: 'var(--bg-surface)',
+                            borderColor: 'var(--border-color)',
+                            borderRadius: '8px',
+                            color: 'var(--text-primary)',
+                            fontFamily: 'Inter, sans-serif',
+                            fontSize: '12px',
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                          }}
+                          itemStyle={{ color: 'var(--text-primary)' }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    {/* Centered overall total inside the donut */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                      <span className="text-[10px] uppercase tracking-widest text-red-400/50 font-semibold">Processed</span>
+                      <span className="text-2xl font-display font-extrabold text-white leading-tight">
+                        {formatNumber(ordersTotal.totalOrders)}
+                      </span>
+                    </div>
+                  </>
                 ) : (
                   <div className="flex items-center justify-center h-full text-red-300/50">No data available</div>
                 )}
               </div>
-              <div className="flex-1">
-                <p className="text-4xl font-bold text-white mb-2">{formatNumber(ordersTotal.totalOrders)}</p>
-                <p className="text-sm text-red-300/60">Total Orders Processed</p>
+
+              {/* Right: Detailed Custom Legend Grid */}
+              <div className="flex-1 w-full">
+                <div className="mb-4 pb-3 border-b border-[#2d1515]">
+                  <p className="text-xs text-red-400/50 uppercase tracking-widest mb-0.5">Status Distribution</p>
+                  <p className="text-[11px] text-red-300/60">Breakdown of all order actions</p>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {statusData.map((item) => {
+                    const color = statusColors[item.name] || 'var(--brand-primary)';
+                    const count = item.value;
+                    const total = ordersTotal.totalOrders || 1;
+                    const pct = ((count / total) * 100).toFixed(1);
+                    
+                    return (
+                      <div 
+                        key={item.name} 
+                        className="flex items-center justify-between px-3 py-2 rounded-lg bg-red-950/5 border border-red-950/20 hover:border-red-900/40 hover:bg-red-950/10 transition-all duration-200"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className="w-2 h-2 rounded-full flex-shrink-0" 
+                            style={{ 
+                              backgroundColor: color, 
+                              boxShadow: `0 0 6px ${color}bf` 
+                            }} 
+                          />
+                          <span className="font-body text-[12px] text-red-200/90 font-medium">{item.name}</span>
+                        </div>
+                        <div className="text-right flex items-center gap-1.5">
+                          <span className="font-metric text-xs text-white font-semibold">{formatNumber(count)}</span>
+                          <span className="font-badge text-[9px] text-red-400/40 font-normal">({pct}%)</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </Card>
