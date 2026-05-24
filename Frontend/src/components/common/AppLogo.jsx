@@ -45,13 +45,13 @@ export default function AppLogo({
 
       {showText && !collapsed && (
         <div className="flex flex-col leading-none min-w-0">
-          <span className={cn('font-logo text-white tracking-logo', s.title)}>
+          <span className={cn('font-logo themed-text tracking-logo', s.title)}>
             Order<span className="text-gradient-brand">Pulse</span>
           </span>
           {showTagline && (
             <span
               className={cn(
-                'font-nav-label text-red-500/60 tracking-ultra mt-1.5 block',
+                'font-nav-label themed-muted tracking-ultra mt-1.5 block',
                 s.tag
               )}
             >

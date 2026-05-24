@@ -68,11 +68,11 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
   return (
     <aside
       className={cn(
-        'bg-[#0a0a0a] border-r border-[#2d1515] flex flex-col h-full transition-all duration-300',
+        'themed-bg border-r themed-border flex flex-col h-full transition-all duration-300',
         isCollapsed ? 'w-[72px]' : 'w-64'
       )}
     >
-      <div className="h-16 flex items-center justify-between px-3 border-b border-[#2d1515] shrink-0">
+      <div className="h-16 flex items-center justify-between px-3 border-b themed-border shrink-0">
         <Link to="/dashboard" className={cn('min-w-0', isCollapsed && 'mx-auto')}>
           <AppLogo size="sm" showText={!isCollapsed} showTagline={false} collapsed={isCollapsed} />
         </Link>
@@ -108,8 +108,8 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
       <Link
         to="/profile"
         className={cn(
-          'mx-3 mt-3 px-3 py-3 rounded-xl bg-red-950/30 border border-red-900/20',
-          'hover:border-red-800/40 transition-colors shrink-0',
+          'mx-3 mt-3 px-3 py-3 rounded-xl themed-surface2 border themed-border',
+          'hover:border-red-500/40 transition-colors shrink-0',
           isCollapsed ? 'flex justify-center' : 'block'
         )}
       >
@@ -117,7 +117,7 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
           <UserAvatar user={user} size="md" />
           {!isCollapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="font-body text-sm font-semibold text-white truncate tracking-ui">
+              <span className="font-body text-sm font-semibold themed-text truncate tracking-ui">
                 {user?.name || 'User'}
               </span>
               <span className="font-badge text-[9px] tracking-[0.1em] text-red-400 mt-0.5">
@@ -136,7 +136,7 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
           return (
             <div key={i} className="px-3">
               {!isCollapsed && (
-                <p className="font-nav-label text-red-800/50 px-3 pt-4 pb-2 select-none">
+                <p className="font-nav-label themed-muted px-3 pt-4 pb-2 select-none">
                   {group.label}
                 </p>
               )}
@@ -151,8 +151,8 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
                         'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                         isCollapsed ? 'justify-center' : '',
                         isActive
-                          ? 'nav-active-glow text-brand-400 border border-red-900/30'
-                          : 'text-red-200/50 hover:text-red-200 hover:bg-red-950/30 border border-transparent'
+                          ? 'nav-active-glow text-brand-400 border border-red-900/30 nav-item-active'
+                          : 'text-red-200/50 hover:text-red-200 hover:bg-red-950/30 border border-transparent nav-item-inactive'
                       )}
                     >
                       <item.icon className={cn('shrink-0', isCollapsed ? 'w-5 h-5' : 'w-4 h-4')} />
@@ -176,11 +176,11 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
         })}
       </div>
 
-      <div className="p-3 border-t border-[#2d1515] shrink-0">
+      <div className="p-3 border-t themed-border shrink-0">
         <button
           onClick={logout}
           className={cn(
-            'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-950/40 transition-colors',
+            'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors nav-item-inactive',
             isCollapsed ? 'justify-center' : ''
           )}
         >

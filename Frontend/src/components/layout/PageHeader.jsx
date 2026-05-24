@@ -9,11 +9,11 @@ export default function PageHeader({ label, title, subtitle, actions }) {
             {label}
           </p>
         )}
-        <h1 className="font-hero text-4xl md:text-5xl text-white tracking-display leading-none">
+        <h1 className="font-hero text-4xl md:text-5xl themed-text tracking-display leading-none">
           {title}
         </h1>
         {subtitle && (
-          <p className="font-body text-[13px] text-red-300/35 mt-2">{subtitle}</p>
+          <p className="font-body text-[13px] themed-muted mt-2">{subtitle}</p>
         )}
       </div>
       {actions && (
