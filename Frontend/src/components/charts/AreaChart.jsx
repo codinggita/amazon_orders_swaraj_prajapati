@@ -5,8 +5,8 @@ export default function AreaChart({ data, dataKey, xKey = 'name', title, color =
   return (
     <div className="w-full">
       {title && <h4 className="text-sm font-semibold text-white mb-4">{title}</h4>}
-      <div className="w-full min-h-[300px]" style={{ height }}>
-        <ResponsiveContainer width="100%" height="100%" minHeight={300}>
+      <div style={{ height }}>
+        <ResponsiveContainer width="100%" height="100%">
           <RechartsAreaChart data={data} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id={`color-${dataKey}`} x1="0" y1="0" x2="0" y2="1">
