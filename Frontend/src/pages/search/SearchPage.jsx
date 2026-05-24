@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import GlassContent from '../../components/common/GlassContent';
 import api from '../../api/axios';
 import PageHeader from '../../components/layout/PageHeader';
 import EmptyState from '../../components/common/EmptyState';
@@ -32,7 +33,8 @@ const ENDPOINTS = {
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
   const [searchType, setSearchType] = useState('all');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,6 +46,10 @@ export default function SearchPage() {
     api.get('/orders/search/recent').then(r => setRecentSearches(r.data?.data || [])).catch(() => {});
     api.get('/orders/search/popular').then(r => setPopularSearches(r.data?.data || [])).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    setQuery(searchParams.get('q') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     if (!query.trim()) { setResults([]); setSearched(false); return; }
@@ -121,18 +127,15 @@ export default function SearchPage() {
           )}
         </div>
       ) : (
-        <div className="bg-[#111]/60 border border-[#2d1515] rounded-xl overflow-hidden">
+        <GlassContent loading={loading} minHeight="200px" empty={!loading && results.length === 0} emptyMessage="No results found">
+          <div className="bg-[#111]/60 border border-[#2d1515] rounded-xl overflow-hidden">
           <div className="p-4 border-b border-[#2d1515] bg-[#1c1112]">
-            <p className="text-sm text-red-300/70">{results.length} results found for "{query}"</p>
+            <p className="font-body-sm text-red-300/70">{results.length} results for &quot;{query}&quot;</p>
           </div>
-          {loading ? (
-            <div className="divide-y divide-[#2d1515]">
-              {Array(5).fill(0).map((_, i) => <div key={i} className="p-4"><div className="h-10 bg-red-950/30 animate-pulse rounded"></div></div>)}
-            </div>
-          ) : results.length === 0 ? (
+          {results.length === 0 ? (
             <EmptyState icon={SearchX} title="No results found" description="Try a different search term or filter" />
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto glass-reveal-in">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#2d1515]">
                   <tr>
@@ -166,7 +169,8 @@ export default function SearchPage() {
               </table>
             </div>
           )}
-        </div>
+          </div>
+        </GlassContent>
       )}
     </div>
   );

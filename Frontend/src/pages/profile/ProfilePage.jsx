@@ -502,7 +502,7 @@ export default function ProfilePage() {
               </span>
             ) : (
               <a
-                href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/auth/google`}
+                href={`${import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://localhost:5000/api/v1'}/auth/google`}
                 className="font-badge text-[10px] tracking-[0.05em] bg-red-950 hover:bg-red-900 text-red-400 border border-red-800/40 px-3 py-1.5 rounded-lg transition-colors">
                 Connect
               </a>
@@ -524,7 +524,7 @@ export default function ProfilePage() {
               </span>
             ) : (
               <a
-                href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/auth/facebook`}
+                href={`${import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://localhost:5000/api/v1'}/auth/facebook`}
                 className="font-badge text-[10px] tracking-[0.05em] bg-red-950 hover:bg-red-900 text-red-400 border border-red-800/40 px-3 py-1.5 rounded-lg transition-colors">
                 Connect
               </a>
