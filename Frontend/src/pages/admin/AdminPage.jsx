@@ -6,6 +6,7 @@ import Spinner from '../../components/common/Spinner';
 import Button from '../../components/common/Button';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import Pagination from '../../components/common/Pagination';
+import Select from '../../components/common/Select';
 import { useAuth } from '../../context/AuthContext';
 import { formatDate, getInitials } from '../../utils/formatters';
 import { Shield, Ban, CheckCircle, Database, Server, Clock, HardDrive, RefreshCw } from 'lucide-react';
@@ -175,14 +176,15 @@ export default function AdminPage() {
                     </td>
                     <td className="px-4 py-3 text-sm text-red-200/80">{u.email}</td>
                     <td className="px-4 py-3">
-                      <select 
+                      <Select 
                         value={u.role} 
                         onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className={`text-xs px-2 py-1 rounded border ${u.role==='admin' ? 'bg-red-900 border-red-700 text-red-300' : 'bg-[#2d1515] border-[#4b2020] text-red-400'} focus:outline-none`}
-                      >
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                      </select>
+                        className={`w-28 text-xs ${u.role==='admin' ? 'bg-red-900 border-red-700 text-red-300' : 'bg-[#2d1515] border-[#4b2020] text-red-400'}`}
+                        options={[
+                          { value: 'user', label: 'User' },
+                          { value: 'admin', label: 'Admin' }
+                        ]}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-0.5 rounded text-xs ${u.isActive ? 'bg-green-900/40 text-green-400' : 'bg-red-900/40 text-red-400'}`}>

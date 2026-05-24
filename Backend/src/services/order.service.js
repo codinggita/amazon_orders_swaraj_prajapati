@@ -18,13 +18,28 @@ class OrderService {
     return sortMap[sort] || { useAggregation: false, sortObj: { OrderDate: -1 } };
   }
 
-  async getAllOrders(page = 1, limit = 10, sort = null) {
+  async getAllOrders(page = 1, limit = 10, sort = null, q = null) {
     const skip = (page - 1) * limit;
     const sortConfig = this.getSortConfig(sort);
+    
+    let matchStage = {};
+    if (q) {
+      const regex = new RegExp(q, "i");
+      matchStage = {
+        $or: [
+          { OrderID: regex },
+          { CustomerName: regex },
+          { ProductName: regex },
+          { Category: regex },
+          { Brand: regex }
+        ]
+      };
+    }
 
     let data;
     if (sortConfig.useAggregation) {
       data = await Order.aggregate([
+        { $match: matchStage },
         { $addFields: { [sortConfig.sortField]: { $toDouble: `$${sortConfig.sortField.replace("Num", "")}` } } },
         { $sort: { [sortConfig.sortField]: sortConfig.order } },
         { $skip: skip },
@@ -32,10 +47,10 @@ class OrderService {
         { $project: { [sortConfig.sortField]: 0 } }
       ]);
     } else {
-      data = await Order.find().sort(sortConfig.sortObj).skip(skip).limit(limit).lean();
+      data = await Order.find(matchStage).sort(sortConfig.sortObj).skip(skip).limit(limit).lean();
     }
 
-    const total = await Order.countDocuments();
+    const total = await Order.countDocuments(matchStage);
     const totalPages = Math.ceil(total / limit);
     return { data, page, limit, total, totalPages };
   }
