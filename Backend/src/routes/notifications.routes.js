@@ -8,14 +8,13 @@ const {
 } = require("../controllers/notifications.controller");
 const { protect, isAdmin } = require("../middlewares/auth.middleware");
 
-// GET    /api/v1/notifications
-router.get("/", protect, isAdmin, listNotifications);
+// GET    /api/v1/notifications — all authenticated users
+router.get("/", protect, listNotifications);
 
 // PATCH  /api/v1/notifications/read/:id
-// NOTE: This must come BEFORE the DELETE /:id route to avoid param conflicts
-router.patch("/read/:id", protect, isAdmin, markNotificationRead);
+router.patch("/read/:id", protect, markNotificationRead);
 
-// DELETE /api/v1/notifications/:id
+// DELETE /api/v1/notifications/:id — admin only
 router.delete("/:id", protect, isAdmin, removeNotification);
 
 module.exports = router;

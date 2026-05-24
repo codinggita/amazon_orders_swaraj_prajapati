@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import api from '../../api/axios';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/common/Button';
+import Select from '../../components/common/Select';
 import { RefreshCw, Archive, RotateCcw, Percent, Trash2, Eraser } from 'lucide-react';
 import { ORDER_STATUSES } from '../../utils/constants';
 import toast from 'react-hot-toast';
@@ -66,9 +67,12 @@ export default function BulkPage() {
             </div>
           </div>
           <textarea value={bulkStatusText} onChange={e=>setBulkStatusText(e.target.value)} placeholder="Order IDs (one per line)" className="w-full bg-[#1c1112] border border-[#2d1515] rounded p-2 text-sm text-white h-24 mb-3 focus:outline-none focus:border-red-600" />
-          <select value={bulkStatus} onChange={e=>setBulkStatus(e.target.value)} className="w-full bg-[#1c1112] border border-[#2d1515] rounded p-2 text-sm text-white mb-4 focus:outline-none focus:border-red-600">
-            {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
+          <Select 
+            value={bulkStatus} 
+            onChange={e=>setBulkStatus(e.target.value)} 
+            className="mb-4"
+            options={ORDER_STATUSES}
+          />
           <Button className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleOp('status', '/orders/bulk/status', 'patch', { orderIDs: parseIds(bulkStatusText), status: bulkStatus })} loading={loadingObj.status}>Update Status</Button>
         </div>
 
