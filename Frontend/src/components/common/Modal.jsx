@@ -35,7 +35,7 @@ export default function Modal({ show, onClose, title, size = 'md', children }) {
     >
       <div className={cn('bg-[#1c1112]/95 backdrop-blur-xl border border-red-900/50 rounded-2xl shadow-2xl shadow-red-950/50 w-full animate-scale-in flex flex-col', sizes[size])}>
         <div className="flex items-center justify-between p-5 border-b border-red-900/30">
-          <h2 className="font-section text-lg text-white">{title}</h2>
+          <h2 className="text-lg font-bold text-white">{title}</h2>
           <button onClick={onClose} className="rounded-lg hover:bg-red-950/50 p-1.5 text-red-400 hover:text-red-300 transition-colors">
             <X className="w-5 h-5" />
           </button>
