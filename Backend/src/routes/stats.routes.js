@@ -17,6 +17,7 @@ router.get("/revenue/yearly", statsController.getYearlyRevenueStats);
 // Entity counts
 router.get("/products/count", statsController.getProductStats);
 router.get("/customers/count", statsController.getCustomerStats);
+router.get("/customers/list", statsController.getCustomersList);
 router.get("/categories/count", statsController.getCategoryStats);
 
 // Failure stats

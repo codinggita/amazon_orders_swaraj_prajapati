@@ -306,6 +306,8 @@ class BulkService {
    */
   async bulkApplyDiscount(orderIDs, discountPercent, reason) {
     try {
+      const pct = typeof discountPercent === "string" ? Number(discountPercent) : discountPercent;
+
       const validationError = validateOrderIDs(orderIDs, 200);
       if (validationError) {
         const err = new Error(validationError);
@@ -313,7 +315,7 @@ class BulkService {
         throw err;
       }
 
-      if (typeof discountPercent !== "number" || discountPercent < 0.01 || discountPercent > 100) {
+      if (typeof pct !== "number" || isNaN(pct) || pct < 0.01 || pct > 100) {
         const err = new Error("discountPercent must be a number between 0.01 and 100");
         err.status = 400;
         throw err;
@@ -327,7 +329,7 @@ class BulkService {
 
       const bulkOps = orders.map(order => {
         const originalAmount = parseFloat(order.TotalAmount) || 0;
-        const discountAmount = parseFloat(((discountPercent / 100) * originalAmount).toFixed(2));
+        const discountAmount = parseFloat(((pct / 100) * originalAmount).toFixed(2));
         const newTotal = parseFloat((originalAmount - discountAmount).toFixed(2));
         const newDiscount = parseFloat(
           (parseFloat(order.Discount || "0") + discountAmount).toFixed(2)
@@ -349,7 +351,7 @@ class BulkService {
                 statusHistory: {
                   status: "Discount Applied",
                   changedAt: new Date(),
-                  discountPercent,
+                  discountPercent: pct,
                   discountAmount,
                   reason: reason || ""
                 }

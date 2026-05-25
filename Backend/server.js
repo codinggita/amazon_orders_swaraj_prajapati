@@ -10,3 +10,5 @@ connectDB();
 app.listen(PORT,()=>{
     console.log(`server is ruunning in ${PORT} port`)
 })
+
+module.exports = app;

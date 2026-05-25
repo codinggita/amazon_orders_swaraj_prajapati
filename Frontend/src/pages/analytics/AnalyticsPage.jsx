@@ -12,6 +12,7 @@ import {
   parsePaymentChart,
 } from '../../utils/apiHelpers';
 import { analyticsAPI } from '../../api/analytics.api';
+import SEO from '../../components/common/SEO';
 
 export default function AnalyticsPage() {
   const [data, setData] = useState(null);
@@ -60,30 +61,45 @@ export default function AnalyticsPage() {
     : [{ name: 'None', value: 1 }];
 
   return (
-    <div>
-      <PageHeader title="Analytics" subtitle="Deep dive into your business metrics" />
+    <>
+      <SEO
+        title="Analytics Dashboard"
+        description="Comprehensive analytics dashboard showing revenue trends, payment distribution, top customers, top products, and category performance."
+        url="/analytics"
+        keywords="order analytics, revenue analytics, amazon analytics, ecommerce analytics dashboard"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "OrderPulse Analytics",
+          "description": "Comprehensive order analytics and revenue insights",
+          "url": "https://order-pulse-swaraj.vercel.app/analytics"
+        }}
+      />
+      <div>
+        <PageHeader title="Analytics" subtitle="Deep dive into your business metrics" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <GlassContent loading={loading} minHeight="300px">
-          <Card title="Monthly Revenue">
-            <AreaChart data={revenueChart} dataKey="value" xKey="name" height={260} />
-          </Card>
-        </GlassContent>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <GlassContent loading={loading} minHeight="300px">
+            <Card title="Monthly Revenue">
+              <AreaChart data={revenueChart} dataKey="value" xKey="name" height={260} />
+            </Card>
+          </GlassContent>
 
-        <GlassContent loading={loading} minHeight="300px">
-          <Card title="Top Categories">
-            <BarChart data={topCategories} dataKey="value" xKey="name" color="#ea580c" height={260} />
-          </Card>
+          <GlassContent loading={loading} minHeight="300px">
+            <Card title="Top Categories">
+              <BarChart data={topCategories} dataKey="value" xKey="name" color="#ea580c" height={260} />
+            </Card>
+          </GlassContent>
+        </div>
+
+        <GlassContent loading={loading} minHeight="280px">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card title="Payment Distribution">
+              <PieChart data={paymentDist} />
+            </Card>
+          </div>
         </GlassContent>
       </div>
-
-      <GlassContent loading={loading} minHeight="280px">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card title="Payment Distribution">
-            <PieChart data={paymentDist} />
-          </Card>
-        </div>
-      </GlassContent>
-    </div>
+    </>
   );
 }

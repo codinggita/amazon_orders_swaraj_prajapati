@@ -70,7 +70,7 @@ export default function NotificationDropdown({ isOpen, onClose }) {
   const unread = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <div className="absolute right-0 mt-2 w-80 md:w-96 bg-[#1c1112]/95 backdrop-blur-xl border border-red-900/40 rounded-xl shadow-2xl z-50 animate-scale-in flex flex-col max-h-[80vh]">
+    <div className="fixed sm:absolute top-16 sm:top-auto right-4 sm:right-0 left-4 sm:left-auto mt-2 w-auto sm:w-80 md:w-96 bg-[#1c1112]/95 backdrop-blur-xl border border-red-900/40 rounded-xl shadow-2xl z-50 animate-scale-in flex flex-col max-h-[80vh]">
       <div className="flex items-center justify-between p-4 border-b border-[#2d1515]">
         <div>
           <h3 className="font-section text-[15px] text-white">Notifications</h3>
