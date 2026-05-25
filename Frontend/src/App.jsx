@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { createMuiTheme } from './config/muiTheme';
@@ -44,7 +43,7 @@ function MuiThemeWrapper({ children }) {
 }
 
 const LoadingFallback = () => (
-  <div className="flex h-screen items-center justify-center bg-[var(--bg-primary)]">
+  <div className="flex h-screen items-center justify-center bg-(--bg-primary)">
     <Spinner center />
   </div>
 );
@@ -53,67 +52,65 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Provider store={store}>
-        <HelmetProvider>
-          <ThemeProvider>
-            <MuiThemeWrapper>
-              <AuthProvider>
-                <BrowserRouter>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/auth/callback" element={<OAuthCallbackPage />} />
-                    
-                    <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-                      <Route path="/dashboard" element={<DashboardPage />} />
-                      <Route path="/profile" element={<ProfilePage />} />
-                      <Route path="/orders" element={<OrdersPage />} />
-                      <Route path="/orders/:orderId" element={<OrderDetailPage />} />
-                      <Route path="/analytics" element={<AnalyticsPage />} />
-                      <Route path="/stats" element={<StatsPage />} />
-                      <Route path="/customers" element={<CustomersPage />} />
-                      <Route path="/recommendations" element={<RecommendationsPage />} />
-                      <Route path="/trending" element={<TrendingPage />} />
-                      <Route path="/shipping" element={<ShippingPage />} />
-                      <Route path="/bulk" element={<BulkPage />} />
-                      <Route path="/search" element={<SearchPage />} />
-                      <Route path="/notifications" element={<NotificationsPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                      <Route path="/admin" element={<AdminPage />} />
-                      <Route path="/system" element={<SystemHealthPage />} />
-                    </Route>
+        <ThemeProvider>
+          <MuiThemeWrapper>
+            <AuthProvider>
+              <BrowserRouter>
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/auth/callback" element={<OAuthCallbackPage />} />
+                  
+                  <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/orders" element={<OrdersPage />} />
+                    <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+                    <Route path="/analytics" element={<AnalyticsPage />} />
+                    <Route path="/stats" element={<StatsPage />} />
+                    <Route path="/customers" element={<CustomersPage />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
+                    <Route path="/trending" element={<TrendingPage />} />
+                    <Route path="/shipping" element={<ShippingPage />} />
+                    <Route path="/bulk" element={<BulkPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/notifications" element={<NotificationsPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/system" element={<SystemHealthPage />} />
+                  </Route>
 
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
-                </Suspense>
-              </BrowserRouter>
-              <Toaster
-                position="top-right"
-                gutter={12}
-                toastOptions={{
-                  duration: 4000,
-                  style: {
-                    background: 'var(--bg-surface)',
-                    color: 'var(--text-primary)',
-                    border: '1px solid var(--border-color)',
-                    fontFamily: 'Inter, system-ui, sans-serif',
-                    fontSize: '14px',
-                  },
-                  success: {
-                    iconTheme: { primary: '#22c55e', secondary: '#1c1112' },
-                  },
-                  error: {
-                    iconTheme: { primary: '#dc2626', secondary: '#fff' },
-                    duration: 5000,
-                  },
-                }}
-              />
-              </AuthProvider>
-            </MuiThemeWrapper>
-          </ThemeProvider>
-        </HelmetProvider>
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+            <Toaster
+              position="top-right"
+              gutter={12}
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: 'var(--bg-surface)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-color)',
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  fontSize: '14px',
+                },
+                success: {
+                  iconTheme: { primary: '#22c55e', secondary: '#1c1112' },
+                },
+                error: {
+                  iconTheme: { primary: '#dc2626', secondary: '#fff' },
+                  duration: 5000,
+                },
+              }}
+            />
+            </AuthProvider>
+          </MuiThemeWrapper>
+        </ThemeProvider>
       </Provider>
     </ErrorBoundary>
   );

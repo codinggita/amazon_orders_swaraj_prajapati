@@ -470,6 +470,71 @@ class StatsService {
   }
 
   /**
+   * Get list of customers with pagination and search filter
+   */
+  async getCustomersList(q, page = 1, limit = 10) {
+    try {
+      const skip = (page - 1) * limit;
+      
+      const matchStage = {};
+      if (q) {
+        matchStage.$or = [
+          { CustomerName: { $regex: q, $options: "i" } },
+          { CustomerID: { $regex: q, $options: "i" } }
+        ];
+      }
+
+      const result = await Order.aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: "$CustomerID",
+            name: { $first: "$CustomerName" },
+            ordersCount: { $sum: 1 },
+            totalSpent: { $sum: toDouble("TotalAmount") },
+            lastOrderDate: { $max: "$OrderDate" }
+          }
+        },
+        {
+          $facet: {
+            metadata: [ { $count: "total" } ],
+            data: [
+              { $sort: { totalSpent: -1 } },
+              { $skip: skip },
+              { $limit: limit }
+            ]
+          }
+        }
+      ]);
+
+      const customersRaw = result[0]?.data || [];
+      const total = result[0]?.metadata[0]?.total || 0;
+
+      const customers = customersRaw.map(c => {
+        const cleanName = (c.name || "unknown").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const email = `${cleanName || "customer"}@example.com`;
+        
+        return {
+          id: c._id || "unknown",
+          name: c.name || "Unknown Customer",
+          email: email,
+          ordersCount: c.ordersCount,
+          totalSpent: round2(c.totalSpent),
+          lastOrderDate: c.lastOrderDate,
+          status: "Active"
+        };
+      });
+
+      return {
+        customers,
+        total
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * Count distinct categories and orders per category
    */
   async getCategoryStats() {

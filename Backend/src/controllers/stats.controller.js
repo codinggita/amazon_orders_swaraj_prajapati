@@ -175,6 +175,26 @@ class StatsController {
     }
   }
 
+  async getCustomersList(req, res) {
+    try {
+      const { q, page, limit } = req.query;
+      const pageNum = parseInt(page) || 1;
+      const limitNum = parseInt(limit) || 10;
+      const data = await statsService.getCustomersList(q, pageNum, limitNum);
+      return res.status(200).json({
+        success: true,
+        message: "Customer list fetched successfully",
+        data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Error fetching customer list",
+        error: error.message,
+      });
+    }
+  }
+
   async getCategoryStats(req, res) {
     try {
       const data = await statsService.getCategoryStats();

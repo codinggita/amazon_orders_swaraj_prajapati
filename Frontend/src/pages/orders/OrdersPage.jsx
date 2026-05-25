@@ -11,6 +11,7 @@ import useDebounce from '../../hooks/useDebounce';
 import GlassContent from '../../components/common/GlassContent';
 import { parseOrdersList } from '../../utils/apiHelpers';
 import CreateOrderModal from '../../components/features/orders/CreateOrderModal';
+import SEO from '../../components/common/SEO';
 
 export default function OrdersPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -49,64 +50,72 @@ export default function OrdersPage() {
   };
 
   return (
-    <div>
-      <PageHeader 
-        title="All Orders" 
-        actions={
-          <>
-            <div className="relative mr-2 hidden md:block">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-red-400/50" />
-              <input 
-                type="text" 
-                placeholder="Search orders..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-[#1c1112] border border-[#2d1515] rounded-lg h-9 pl-9 pr-4 text-sm text-white placeholder:text-red-300/40 focus:outline-none focus:border-red-600 w-48"
-              />
-            </div>
-            <Button variant="secondary" icon={Filter} onClick={() => setShowFilters(!showFilters)}>
-              Filters
-            </Button>
-            <Button variant="secondary" icon={Download}>Export</Button>
-            <Button icon={Plus} onClick={() => setIsCreateModalOpen(true)}>New Order</Button>
-          </>
-        } 
+    <>
+      <SEO
+        title="All Orders"
+        description="View and manage all your Amazon orders with advanced filtering, sorting, search, and bulk operations. Real-time order data from MongoDB."
+        url="/orders"
+        keywords="amazon orders, order management, order tracking, bulk orders, order filter"
       />
-
-      {showFilters && (
-        <OrderFilters 
-          filters={filters} 
-          onFilterChange={handleFilterChange} 
-          onClear={() => { setFilters({ status: '', payment: '' }); setPage(1); }} 
+      <div>
+        <PageHeader 
+          title="All Orders" 
+          actions={
+            <>
+              <div className="relative mr-2 hidden md:block">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-red-400/50" />
+                <input 
+                  type="text" 
+                  placeholder="Search orders..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-[#1c1112] border border-[#2d1515] rounded-lg h-9 pl-9 pr-4 text-sm text-white placeholder:text-red-300/40 focus:outline-none focus:border-red-600 w-48"
+                />
+              </div>
+              <Button variant="secondary" icon={Filter} onClick={() => setShowFilters(!showFilters)}>
+                Filters
+              </Button>
+              <Button variant="secondary" icon={Download}>Export</Button>
+              <Button icon={Plus} onClick={() => setIsCreateModalOpen(true)}>New Order</Button>
+            </>
+          } 
         />
-      )}
 
-      <GlassContent loading={loading} minHeight="280px" empty={!loading && orders.length === 0}>
-        <OrderTable
-          orders={orders}
-          loading={false}
-          selectedRows={new Set()}
-          onSelectRow={() => {}}
-          onSelectAll={() => {}}
-        />
-      </GlassContent>
+        {showFilters && (
+          <OrderFilters 
+            filters={filters} 
+            onFilterChange={handleFilterChange} 
+            onClear={() => { setFilters({ status: '', payment: '' }); setPage(1); }} 
+          />
+        )}
 
-      <div className="mt-6 glass-reveal-in">
-        <Pagination 
-          page={page} 
-          totalPages={totalPages} 
-          total={total} 
-          limit={limit} 
-          onPageChange={setPage} 
-          onLimitChange={(l) => { setLimit(l); setPage(1); }} 
+        <GlassContent loading={loading} minHeight="280px" empty={!loading && orders.length === 0}>
+          <OrderTable
+            orders={orders}
+            loading={false}
+            selectedRows={new Set()}
+            onSelectRow={() => {}}
+            onSelectAll={() => {}}
+          />
+        </GlassContent>
+
+        <div className="mt-6 glass-reveal-in">
+          <Pagination 
+            page={page} 
+            totalPages={totalPages} 
+            total={total} 
+            limit={limit} 
+            onPageChange={setPage} 
+            onLimitChange={(l) => { setLimit(l); setPage(1); }} 
+          />
+        </div>
+
+        <CreateOrderModal 
+          show={isCreateModalOpen} 
+          onClose={() => setIsCreateModalOpen(false)} 
+          onSuccess={() => { setIsCreateModalOpen(false); refetch(); }} 
         />
       </div>
-
-      <CreateOrderModal 
-        show={isCreateModalOpen} 
-        onClose={() => setIsCreateModalOpen(false)} 
-        onSuccess={() => { setIsCreateModalOpen(false); refetch(); }} 
-      />
-    </div>
+    </>
   );
 }

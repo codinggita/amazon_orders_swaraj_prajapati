@@ -1,0 +1,43 @@
+# OrderPulse robots.txt
+# https://order-pulse-swaraj.vercel.app/
+
+User-agent: *
+Allow: /
+Allow: /dashboard
+Allow: /orders
+Allow: /analytics
+Allow: /stats
+Allow: /shipping
+Allow: /trending
+Allow: /recommendations
+
+# Block authenticated/private routes from indexing
+Disallow: /admin
+Disallow: /bulk
+Disallow: /profile
+Disallow: /settings
+Disallow: /validate
+Disallow: /errors
+Disallow: /auth/callback
+
+# Block API calls
+Disallow: /api/
+
+# Crawl delay
+Crawl-delay: 10
+
+# Sitemap location
+Sitemap: https://order-pulse-swaraj.vercel.app/sitemap.xml
+
+# Allow major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 10
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 10

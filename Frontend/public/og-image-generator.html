@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0608 50%, #0a0a0a 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 80px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .left { flex: 1; }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .logo-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 36px; height: 36px; }
+  .logo-text { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+  .logo-text span { color: #dc2626; }
+  .tagline {
+    font-size: 11px; letter-spacing: 3px;
+    color: rgba(220,38,38,0.5); text-transform: uppercase;
+    font-weight: 600; margin-left: 80px; margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 54px; font-weight: 800;
+    color: #fff; line-height: 1.1;
+    letter-spacing: -2px; margin-bottom: 20px;
+  }
+  h1 span { color: #dc2626; }
+  .desc {
+    font-size: 18px; color: rgba(252,165,165,0.6);
+    line-height: 1.6; max-width: 480px;
+  }
+  .features {
+    display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap;
+  }
+  .feature {
+    padding: 8px 16px; border-radius: 20px;
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.2);
+    font-size: 13px; color: rgba(252,165,165,0.8);
+    font-weight: 500;
+  }
+  .right {
+    width: 420px; margin-left: 60px;
+  }
+  .dashboard-preview {
+    background: #1c1112;
+    border: 1px solid #4b2020;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 80px rgba(220,38,38,0.2);
+  }
+  .preview-navbar {
+    height: 28px;
+    background: #2d1515;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .preview-cards {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 16px;
+  }
+  .preview-card {
+    background: #2d1515; border: 1px solid #4b2020;
+    border-radius: 12px; padding: 12px; height: 60px;
+  }
+  .preview-card .label {
+    height: 4px; background: #4b2020; border-radius: 2px;
+    width: 60%; margin-bottom: 8px;
+  }
+  .preview-card .value {
+    height: 8px; background: #dc2626; border-radius: 2px;
+    width: 80%; opacity: 0.7;
+  }
+  .preview-chart {
+    background: #2d1515; border: 1px solid #4b2020;
+    border-radius: 12px; padding: 12px; height: 80px;
+    display: flex; align-items: flex-end; gap: 4px;
+  }
+  .bar {
+    flex: 1; background: linear-gradient(to top, #dc2626, rgba(220,38,38,0.3));
+    border-radius: 4px 4px 0 0;
+  }
+  .url-badge {
+    position: absolute;
+    bottom: 40px; right: 80px;
+    font-size: 13px; color: rgba(220,38,38,0.5);
+    font-family: monospace;
+  }
+  /* Background decoration */
+  .glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,38,38,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="glow"></div>
+
+  <div class="left">
+    <div class="logo-row">
+      <div class="logo-icon">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="2,16 7,16 9,10 11,22 13,14 15,18 17,8 19,24 21,16 30,16"
+            fill="none" stroke="white" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">Order<span>Pulse</span></div>
+    </div>
+
+    <p class="tagline">The Heartbeat of Your Business</p>
+
+    <h1>Smart <span>Order</span><br/>Management</h1>
+    <p class="desc">
+      Real-time analytics, bulk operations, AI recommendations,
+      and intelligent shipping tracking for Amazon sellers.
+    </p>
+
+    <div class="features">
+      <span class="feature">📊 Real-time Analytics</span>
+      <span class="feature">🚀 Bulk Operations</span>
+      <span class="feature">🤖 AI Recommendations</span>
+      <span class="feature">🚚 Shipping Tracking</span>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="dashboard-preview">
+      <div class="preview-navbar">
+        <div class="dot" style="background:#dc2626"></div>
+        <div class="dot" style="background:#4b2020"></div>
+        <div class="dot" style="background:#4b2020"></div>
+        <div style="flex:1; height:6px; background:#4b2020; border-radius:3px; margin-left:8px;"></div>
+      </div>
+      <div class="preview-cards">
+        <div class="preview-card">
+          <div class="label"></div>
+          <div class="value"></div>
+        </div>
+        <div class="preview-card">
+          <div class="label"></div>
+          <div class="value" style="background:#f97316;"></div>
+        </div>
+        <div class="preview-card">
+          <div class="label"></div>
+          <div class="value" style="background:#22c55e;"></div>
+        </div>
+        <div class="preview-card">
+          <div class="label"></div>
+          <div class="value" style="background:#3b82f6;"></div>
+        </div>
+      </div>
+      <div class="preview-chart">
+        <div class="bar" style="height:40%"></div>
+        <div class="bar" style="height:65%"></div>
+        <div class="bar" style="height:50%"></div>
+        <div class="bar" style="height:85%"></div>
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:95%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:80%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="url-badge">order-pulse-swaraj.vercel.app</div>
+</div>
+</body>
+</html>

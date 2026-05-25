@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import toast from 'react-hot-toast';
+import SEO from '../../components/common/SEO';
 import {
   User, Mail, Shield, Clock, Calendar, Camera,
   Eye, EyeOff, Lock, LogOut, Trash2, Monitor,
@@ -976,52 +977,60 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-6">
-      {/* PAGE HEADER */}
-      <div className="mb-8">
-        <p className="font-label text-[10px] tracking-[0.25em] text-red-500 uppercase mb-2">
-          ACCOUNT SETTINGS
-        </p>
-        <h1 className="font-hero text-[42px] text-white tracking-[-0.03em] leading-none">
-          Profile
-        </h1>
-        <p className="font-body text-[13px] text-red-300/40 mt-2">
-          Manage your account, security, and active sessions
-        </p>
-      </div>
-
-      {/* TABS */}
-      <div className="flex gap-0 border-b border-[#2d1515] mb-8">
-        {['general', 'security', 'sessions'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`font-badge text-[11px] tracking-[0.08em] uppercase
-                        pb-3 px-1 mr-8 border-b-2 transition-all duration-200
-                        ${activeTab === tab
-                          ? 'border-red-500 text-white'
-                          : 'border-transparent text-red-400/50 hover:text-red-300/70'}`}>
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* TAB CONTENT */}
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="w-8 h-8 border-4 border-red-900/30 border-t-red-600 rounded-full animate-spin"/>
+    <>
+      <SEO
+        title="My Profile"
+        description="Manage your OrderPulse account profile, security settings, and active sessions."
+        url="/profile"
+        noIndex={true}
+      />
+      <div className="min-h-screen bg-[#0a0a0a] p-6">
+        {/* PAGE HEADER */}
+        <div className="mb-8">
+          <p className="font-label text-[10px] tracking-[0.25em] text-red-500 uppercase mb-2">
+            ACCOUNT SETTINGS
+          </p>
+          <h1 className="font-hero text-[42px] text-white tracking-[-0.03em] leading-none">
+            Profile
+          </h1>
+          <p className="font-body text-[13px] text-red-300/40 mt-2">
+            Manage your account, security, and active sessions
+          </p>
         </div>
-      ) : (
-        <>
-          {activeTab === 'general' && <GeneralTab />}
-          {activeTab === 'security' && <SecurityTab />}
-          {activeTab === 'sessions' && <SessionsTab />}
-        </>
-      )}
 
-      {/* MODALS */}
-      {showOTPModal && <OTPModal />}
-      {showDeleteModal && <DeleteAccountModal />}
-    </div>
+        {/* TABS */}
+        <div className="flex gap-0 border-b border-[#2d1515] mb-8">
+          {['general', 'security', 'sessions'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`font-badge text-[11px] tracking-[0.08em] uppercase
+                          pb-3 px-1 mr-8 border-b-2 transition-all duration-200
+                          ${activeTab === tab
+                            ? 'border-red-500 text-white'
+                            : 'border-transparent text-red-400/50 hover:text-red-300/70'}`}>
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* TAB CONTENT */}
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-4 border-red-900/30 border-t-red-600 rounded-full animate-spin"/>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'general' && <GeneralTab />}
+            {activeTab === 'security' && <SecurityTab />}
+            {activeTab === 'sessions' && <SessionsTab />}
+          </>
+        )}
+
+        {/* MODALS */}
+        {showOTPModal && <OTPModal />}
+        {showDeleteModal && <DeleteAccountModal />}
+      </div>
+    </>
   );
 }

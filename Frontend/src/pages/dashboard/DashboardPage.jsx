@@ -18,6 +18,7 @@ import { analyticsAPI } from '../../api/analytics.api';
 import { systemAPI } from '../../api/system.api';
 import { ordersAPI } from '../../api/orders.api';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/common/SEO';
 
 export default function DashboardPage() {
   const [data, setData] = useState(null);
@@ -101,92 +102,112 @@ export default function DashboardPage() {
     : [{ name: 'No data', value: 0 }];
 
   return (
-    <div>
-      <PageHeader
-        label="OPERATIONAL DASHBOARD"
-        title="Overview"
-        subtitle="Real-time metrics for Amazon Seller Central"
+    <>
+      <SEO
+        title="Dashboard Overview"
+        description="Real-time operational dashboard showing total revenue, pending orders, return rates, and system health for your Amazon seller account."
+        url="/dashboard"
+        keywords="order dashboard, amazon analytics, revenue tracking, order management dashboard"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "OrderPulse Dashboard",
+          "description": "Real-time order management dashboard",
+          "url": "https://order-pulse-swaraj.vercel.app/dashboard",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "OrderPulse",
+            "url": "https://order-pulse-swaraj.vercel.app"
+          }
+        }}
       />
+      <div>
+        <PageHeader
+          label="OPERATIONAL DASHBOARD"
+          title="Overview"
+          subtitle="Real-time metrics for Amazon Seller Central"
+        />
 
-      <GlassContent loading={loading} minHeight="140px" className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          <KPICard
-            title="Total Revenue"
-            value={formatCurrencyCompact(data?.revenue ?? 0)}
-            icon={DollarSign}
-            trend={data?.revenue > 0 ? 12.5 : null}
-            trendLabel="vs last month"
-            colorClass="bg-green-500/20 text-green-500"
-          />
-          <KPICard
-            title="Total Orders"
-            value={formatNumber(data?.orders ?? 0)}
-            icon={ShoppingCart}
-            trend={data?.orders > 0 ? 5.2 : null}
-            trendLabel="vs last month"
-            colorClass="bg-brand-600/20 text-brand-500"
-          />
-          <KPICard
-            title="Return Rate"
-            value={`${(data?.returnRate ?? 0).toFixed(1)}%`}
-            icon={RotateCcw}
-            trend={data?.returnRate > 0 ? -1.1 : null}
-            trendLabel="vs last month"
-            colorClass="bg-orange-500/20 text-orange-500"
-          />
-          <KPICard
-            title="System Health"
-            value="99.9%"
-            icon={Activity}
-            trendLabel={data?.systemStatus ?? 'Operational'}
-            colorClass="bg-blue-500/20 text-blue-500"
-          />
-        </div>
-      </GlassContent>
+        <GlassContent loading={loading} minHeight="140px" className="mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <KPICard
+              title="Total Revenue"
+              value={formatCurrencyCompact(data?.revenue ?? 0)}
+              icon={DollarSign}
+              trend={data?.revenue > 0 ? 12.5 : null}
+              trendLabel="vs last month"
+              colorClass="bg-green-500/20 text-green-500"
+            />
+            <KPICard
+              title="Total Orders"
+              value={formatNumber(data?.orders ?? 0)}
+              icon={ShoppingCart}
+              trend={data?.orders > 0 ? 5.2 : null}
+              trendLabel="vs last month"
+              colorClass="bg-brand-600/20 text-brand-500"
+            />
+            <KPICard
+              title="Return Rate"
+              value={`${(data?.returnRate ?? 0).toFixed(1)}%`}
+              icon={RotateCcw}
+              trend={data?.returnRate > 0 ? -1.1 : null}
+              trendLabel="vs last month"
+              colorClass="bg-orange-500/20 text-orange-500"
+            />
+            <KPICard
+              title="System Health"
+              value="99.9%"
+              icon={Activity}
+              trendLabel={data?.systemStatus ?? 'Operational'}
+              colorClass="bg-blue-500/20 text-blue-500"
+            />
+          </div>
+        </GlassContent>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <GlassContent loading={loading} minHeight="320px">
-            <Card title="Revenue Velocity" titleClassName="font-card-title text-[15px]" padding="p-5 pb-0">
-              <AreaChart data={chartData} dataKey="value" xKey="name" height={280} />
-            </Card>
-          </GlassContent>
-        </div>
-        <div>
-          <GlassContent
-            loading={loading}
-            minHeight="320px"
-            empty={!loading && (!data?.recentOrders?.length)}
-            emptyMessage="No recent orders"
-          >
-            <Card title="Action Required" titleClassName="font-card-title text-[15px]" padding="p-0">
-              <div className="flex justify-between items-center p-4 border-b themed-border">
-                <span className="font-card-title text-[15px] themed-text">Recent Orders</span>
-                <Link to="/orders" className="font-body-xs text-red-400 hover:text-red-300">
-                  View All
-                </Link>
-              </div>
-              <div className="divide-y divide-[var(--border-color)]">
-                {(data?.recentOrders ?? []).slice(0, 5).map((order, i) => (
-                  <Link
-                    key={order.OrderID || order._id || i}
-                    to={`/orders/${order.OrderID || order._id}`}
-                    className="p-4 flex items-center justify-between hover:bg-brand-500/10 transition-colors block"
-                  >
-                    <div>
-                      <p className="font-order-id text-brand-500">#{order.OrderID || order._id}</p>
-                      <p className="font-currency text-[13px] themed-text mt-0.5">
-                        {formatCurrency(order.TotalAmount)}
-                      </p>
-                    </div>
-                    <OrderStatusBadge status={order.OrderStatus || 'Pending'} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <GlassContent loading={loading} minHeight="320px">
+              <Card title="Revenue Velocity" titleClassName="font-card-title text-[15px]" padding="p-5 pb-0">
+                <AreaChart data={chartData} dataKey="value" xKey="name" height={280} />
+              </Card>
+            </GlassContent>
+          </div>
+          <div>
+            <GlassContent
+              loading={loading}
+              minHeight="320px"
+              empty={!loading && (!data?.recentOrders?.length)}
+              emptyMessage="No recent orders"
+            >
+              <Card title="Action Required" titleClassName="font-card-title text-[15px]" padding="p-0">
+                <div className="flex justify-between items-center p-4 border-b themed-border">
+                  <span className="font-card-title text-[15px] themed-text">Recent Orders</span>
+                  <Link to="/orders" className="font-body-xs text-red-400 hover:text-red-300">
+                    View All
                   </Link>
-                ))}
-              </div>
-            </Card>
-          </GlassContent>
+                </div>
+                <div className="divide-y divide-[var(--border-color)]">
+                  {(data?.recentOrders ?? []).slice(0, 5).map((order, i) => (
+                    <Link
+                      key={order.OrderID || order._id || i}
+                      to={`/orders/${order.OrderID || order._id}`}
+                      className="p-4 flex items-center justify-between hover:bg-brand-500/10 transition-colors block"
+                    >
+                      <div>
+                        <p className="font-order-id text-brand-500">#{order.OrderID || order._id}</p>
+                        <p className="font-currency text-[13px] themed-text mt-0.5">
+                          {formatCurrency(order.TotalAmount)}
+                        </p>
+                      </div>
+                      <OrderStatusBadge status={order.OrderStatus || 'Pending'} />
+                    </Link>
+                  ))}
+                </div>
+              </Card>
+            </GlassContent>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

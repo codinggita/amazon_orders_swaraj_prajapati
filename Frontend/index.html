@@ -1,22 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0a0a0a" />
-    <meta name="description" content="OrderPulse — Amazon orders management dashboard" />
-    <title>OrderPulse</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <!-- Primary Meta Tags -->
+  <title>OrderPulse - Smart Order Management System</title>
+  <meta name="title"       content="OrderPulse - Smart Order Management System" />
+  <meta name="description" content="OrderPulse is a powerful full-stack order management dashboard with real-time analytics, bulk operations, AI recommendations, and intelligent shipping tracking for Amazon sellers." />
+  <meta name="keywords"    content="order management, amazon orders, dashboard, analytics, shipping tracking, bulk operations, order tracking, ecommerce dashboard, admin panel, real-time analytics, OrderPulse" />
+  <meta name="author"      content="OrderPulse Team" />
+  <meta name="robots"      content="index, follow" />
+  <meta name="language"    content="English" />
+  <meta name="revisit-after" content="7 days" />
+  <meta name="theme-color"   content="#dc2626" />
+  <meta name="color-scheme"  content="dark light" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://order-pulse-swaraj.vercel.app/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://order-pulse-swaraj.vercel.app/" />
+  <meta property="og:title"       content="OrderPulse - Smart Order Management System" />
+  <meta property="og:description" content="Manage your Amazon orders intelligently with real-time analytics, bulk operations, AI-powered recommendations, and comprehensive shipping tracking." />
+  <meta property="og:image"       content="https://order-pulse-swaraj.vercel.app/og-image.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt"    content="OrderPulse Dashboard Preview" />
+  <meta property="og:site_name"    content="OrderPulse" />
+  <meta property="og:locale"       content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:url"         content="https://order-pulse-swaraj.vercel.app/" />
+  <meta name="twitter:title"       content="OrderPulse - Smart Order Management System" />
+  <meta name="twitter:description" content="Manage your Amazon orders intelligently with real-time analytics, bulk operations, AI-powered recommendations, and comprehensive shipping tracking." />
+  <meta name="twitter:image"       content="https://order-pulse-swaraj.vercel.app/og-image.png" />
+  <meta name="twitter:image:alt"   content="OrderPulse Dashboard Preview" />
+
+  <!-- Favicon -->
+  <link rel="icon"             type="image/svg+xml"  href="/favicon.svg" />
+  <link rel="icon"             type="image/png"       href="/favicon.png" sizes="32x32" />
+  <link rel="apple-touch-icon"                        href="/apple-touch-icon.png" sizes="180x180" />
+  <link rel="manifest"                                href="/site.webmanifest" />
+  <link rel="mask-icon"                               href="/safari-pinned-tab.svg" color="#dc2626" />
+  <meta name="msapplication-TileColor" content="#dc2626" />
+  <meta name="msapplication-config"    content="/browserconfig.xml" />
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://amazon-orders-api.onrender.com" />
+  <link rel="dns-prefetch" href="https://amazon-orders-api.onrender.com" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet" />
+
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "OrderPulse",
+    "url": "https://order-pulse-swaraj.vercel.app/",
+    "description": "Smart Order Management System for Amazon sellers with real-time analytics, bulk operations, and AI-powered recommendations.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "OrderPulse Developer"
+    },
+    "featureList": [
+      "Real-time Order Analytics",
+      "Bulk Order Operations",
+      "AI Product Recommendations",
+      "Shipping Tracking",
+      "Customer Management",
+      "Revenue Dashboard",
+      "Admin Panel",
+      "Role-based Access Control"
+    ],
+    "screenshot": "https://order-pulse-swaraj.vercel.app/og-image.png",
+    "softwareVersion": "1.0.0",
+    "datePublished": "2026-05-29",
+    "inLanguage": "en-US"
+  }
+  </script>
+
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://order-pulse-swaraj.vercel.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Dashboard",
+        "item": "https://order-pulse-swaraj.vercel.app/dashboard"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Orders",
+        "item": "https://order-pulse-swaraj.vercel.app/orders"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Analytics",
+        "item": "https://order-pulse-swaraj.vercel.app/analytics"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Resource hints -->
+  <link rel="preload" href="/src/main.jsx" as="script" />
+
+  <!-- Critical CSS inline (for above fold) -->
+  <style>
+    body {
+      margin: 0;
+      background-color: #0a0a0a;
+      color: #fef2f2;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    #root {
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
