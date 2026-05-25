@@ -68,6 +68,7 @@ export default function OrdersPage() {
                   type="text" 
                   placeholder="Search orders..." 
                   value={searchQuery}
+                  aria-label="Search orders"
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="bg-[#1c1112] border border-[#2d1515] rounded-lg h-9 pl-9 pr-4 text-sm text-white placeholder:text-red-300/40 focus:outline-none focus:border-red-600 w-48"
                 />

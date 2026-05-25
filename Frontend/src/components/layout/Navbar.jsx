@@ -48,7 +48,7 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }) {
         </button>
 
         {sidebarCollapsed && (
-          <Link to="/dashboard" className="hidden sm:block">
+          <Link to="/dashboard" aria-label="OrderPulse Home" className="hidden sm:block">
             <AppLogo size="sm" showTagline={false} />
           </Link>
         )}
@@ -114,6 +114,7 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }) {
               setShowUserMenu(!showUserMenu);
               setShowNotifications(false);
             }}
+            aria-label="User profile menu"
             className="flex items-center gap-2 hover:bg-red-950/30 p-1 pr-2 rounded-lg transition-colors border border-transparent hover:border-[#2d1515]"
           >
             <UserAvatar user={user} size="sm" />

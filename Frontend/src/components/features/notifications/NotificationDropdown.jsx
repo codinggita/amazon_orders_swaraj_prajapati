@@ -123,6 +123,7 @@ export default function NotificationDropdown({ isOpen, onClose }) {
                       onClick={(e) => handleMarkRead(n._id, e)}
                       className="p-1 rounded hover:bg-[#2d1515] text-red-400"
                       title="Mark as read"
+                      aria-label="Mark as read"
                     >
                       <CheckCircle className="w-3.5 h-3.5" />
                     </button>
