@@ -73,7 +73,7 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
       )}
     >
       <div className="h-16 flex items-center justify-between px-3 border-b themed-border shrink-0">
-        <Link to="/dashboard" className={cn('min-w-0', isCollapsed && 'mx-auto')}>
+        <Link to="/dashboard" aria-label="OrderPulse Home" className={cn('min-w-0', isCollapsed && 'mx-auto')}>
           <AppLogo size="sm" showText={!isCollapsed} showTagline={false} collapsed={isCollapsed} />
         </Link>
         {!isCollapsed ? (
@@ -107,6 +107,7 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
 
       <Link
         to="/profile"
+        aria-label="User Profile"
         className={cn(
           'mx-3 mt-3 px-3 py-3 rounded-xl themed-surface2 border themed-border',
           'hover:border-red-500/40 transition-colors shrink-0',
@@ -179,6 +180,7 @@ export default function Sidebar({ isOpen, isCollapsed, onToggleCollapse }) {
       <div className="p-3 border-t themed-border shrink-0">
         <button
           onClick={logout}
+          aria-label="Sign Out"
           className={cn(
             'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors nav-item-inactive',
             isCollapsed ? 'justify-center' : ''
